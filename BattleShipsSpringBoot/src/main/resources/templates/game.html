@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+    <title>Rozmieszczenie</title>
+    <style>
+        td {
+            text-align: center;
+            border: solid 1px black;
+            width: 20px;
+            height: 20px;
+            background-color: floralwhite;
+        }
+        .checkfield:checked{
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-color: red;
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            padding: 0;
+        }
+        .checkfield{
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-color: lightblue;
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            padding: 0;
+
+        }
+
+    </style>
+</head>
+<body>
+<div th:if="${session.name==session.gameName}">
+    <h2 th:text="${session.name} + ', grasz jako gospodarz.'"></h2>
+</div>
+
+<div th:if="${session.gameName!=session.name}">
+    <h2 th:text="${session.name} + ', grasz jako gość.'"></h2>
+</div>
+<br>
+<h3 th:text="${wrongNumberOfChecks}"></h3>
+<br>
+<form method="post" th:action="'/game/'+${session.name}" th:object="${fieldsForm}">
+<table style="text-align: center; border: solid 1px black;">
+    <tr>
+        <td>X</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td><td>I</td><td>J</td>
+    </tr>
+    <tr>
+        <td>1</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A1" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B1" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C1" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D1" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E1" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F1" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G1" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H1" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I1" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J1" class="checkfield" /></td>
+    </tr>
+    <tr>
+        <td>2</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J2" class="checkfield" /></td>
+    </tr>
+    <tr>
+        <td>3</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J3" class="checkfield" /></td>
+    </tr>
+    <tr>
+        <td>4</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J4" class="checkfield" /></td>
+    </tr>
+    <tr>
+        <td>5</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A5" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B5" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C5" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D5" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E5" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F5" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G5" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H5" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I5" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J5" class="checkfield" /></td>
+    </tr>
+    <tr>
+        <td>6</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A6" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B6" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C6" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D6" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E6" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F6" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G6" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H6" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I6" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J6" class="checkfield" /></td>
+    </tr>
+    <tr>
+        <td>7</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A7" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B7" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C7" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D7" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E7" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F7" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G7" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H7" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I7" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J7" class="checkfield" /></td>
+    </tr>
+    <tr>
+        <td>8</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A8" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B8" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C8" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D8" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E8" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F8" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G8" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H8" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I8" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J8" class="checkfield" /></td>
+    </tr>
+    <tr>
+        <td>9</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A9" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B9" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C9" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D9" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E9" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F9" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G9" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H9" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I9" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J9" class="checkfield" /></td>
+    </tr>
+    <tr>
+        <td>10</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J10" class="checkfield" /></td>
+    </tr>
+</table>
+    <p><input type="submit"></p>
+</form>
+<h3 th:text="${wrongPlacement}" style="color: blue"></h3>
+</body>
+</html>

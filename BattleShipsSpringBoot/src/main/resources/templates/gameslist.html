@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+    <title>Dostępne gry</title>
+</head>
+<body>
+<h1 th:text="'Witaj '+${name}"></h1>
+<br>
+<p><a href="newgame">Stwórz nową grę</a></p>
+<p>
+        Każdy może stworzyć tylko jedną grę.
+</p>
+<br>
+<h2>Dostępna lista gier:</h2>
+<br>
+<table>
+<th:block th:each="game : ${games}">
+	<tr>
+		<td><a th:href="'game/'+${game.host.name}" th:text="'Gra stworzona przez: '+${game.host.name}"></a></td>
+	</tr>
+</th:block>
+</table>
+<br>
+</body>
+</html>
