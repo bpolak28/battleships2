@@ -34,7 +34,7 @@ public class GameService {
 
     public void addGameByPlayerName(String name){
         Player playerByName = playerService.getPlayerByName(name);
-        if(!playerByName.isCreatedGame()){
+        if(!playerByName.hasCreatedGame()){
             Game newGame = new Game(playerByName);
             newGame.setGameHostName(name);
             addGame(newGame);

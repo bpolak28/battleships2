@@ -18,7 +18,7 @@ public class Player {
         return name;
     }
 
-    public boolean isCreatedGame() {
+    public boolean hasCreatedGame() {
         return createdGame;
     }
 
