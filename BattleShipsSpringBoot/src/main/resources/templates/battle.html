@@ -2,12 +2,107 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>dupa</title>
-<script src="/webjars/sockjs-client/sockjs.min.js"></script>
-<script src="/webjars/stomp-websocket/stomp.min.js"></script>
-<script src="/app.js"></script>
+<title>Bitwa!</title>
+<style>
+	#response {
+		width: 500px;
+		height: 100px;
+		overflow-y: scroll;
+		overflow-x: auto;
+	}
+	.battlefield {
+		display: inline-block;
+		border: solid black 1px;
+	}
+</style>
 </head>
-<body>
-<div><form ><input id="send" type="text"><input type="submit"></form></div>
+<body >
+        <div id="conteiner">
+        <div id="myMap" class="battlefield">
+        	<p>plansza</p>
+        </div>
+        <div id="enemyMap" class="battlefield">
+        	<p>plansza</p>
+        </div>
+            <br />
+            <br />
+            
+            <div id="conversationDiv">
+            	<input type="text" id="from" th:value="${session.name}"></input>
+            	<p>Globalny czat</p>
+                <div id="chat">
+                <p id="response"></p>
+                <input style="min-width:250px" type="text" id="text" placeholder="Napisz coś do innych graczy..."/>
+                <button id="sendMessage" onclick="sendMessage();">Send</button>
+                </div>
+                
+                
+            </div>
+        </div>
+        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+		<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+        <script th:inline="javascript">
+        /*<![CDATA[*/
+        var stompClient = null;
+        
+        var link = [[${session.gameName}]];
+
+        var socket = new SockJS('/chat');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame) {
+        	console.log('Connected: ' + frame);
+        	stompClient.subscribe('/topic', function(messageOutput) {
+        		showMessageOutput(JSON.parse(messageOutput.body));
+        	});
+        });
+
+        document.getElementById('from').style.visibility = 'hidden';
+
+        function sendMessage() {
+        	var from = document.getElementById('from').value;
+        	var text = document.getElementById('text').value;
+        	stompClient.send("/app/chat", {}, JSON.stringify({
+        		'fromPlayer' : from,
+        		'message' : text
+        	}));
+        	
+        	
+        }
+
+        function showMessageOutput(messageOutput) {
+        	var response = document.getElementById('response');
+        	console.log(messageOutput.fromPlayer + ": "
+        			+ messageOutput.message);
+        	var p = document.createElement('p');
+        	p.appendChild(document.createTextNode(messageOutput.fromPlayer + ": "
+        			+ messageOutput.message));
+        	response.appendChild(p);
+        	document.getElementById('response').scrollTop=1e6;
+        	document.getElementById('text').value = "";
+        }
+        
+        var generate = "<table><tr>";
+        
+        var numOfRow = "1";
+        
+        var i;
+        
+        for (i=0;i<10;i++){
+        	if(i==0){
+        		generate += "</tr><tr>";
+        	} else if(i==1){
+        		generate += "<td>"+numOfRow+"</td>";
+        		
+        	} else {
+        		generate += "<td><input type='button' th:value='A1' class='field' /></td>";
+        	}
+        }
+        
+        generate+="</tr></table>";
+        document.getElementById("myMap").innerHTML=generate;
+        
+        console.log(5+6);
+        /*]]>*/
+        </script>
 </body>
 </html>

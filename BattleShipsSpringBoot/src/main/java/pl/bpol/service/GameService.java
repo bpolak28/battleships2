@@ -7,6 +7,8 @@ import pl.bpol.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Component
 public class GameService {
@@ -57,6 +59,13 @@ public class GameService {
 
     public Game getGameByHostName(String name){
         return games.stream().filter( g -> g.getGameHostName().equals(name)).findFirst().orElseGet(null);
+    }
+    
+    public Game getGameByGuestName(String name){
+    	
+    	List<Game> newGames = games.stream().filter(g -> g.getGuest()!=null).collect(Collectors.toList());
+    	
+    	return newGames.stream().filter(g -> g.getGuest().getName().equals(name)).findFirst().orElseGet(null);
     }
 
     public void setShipsLocationForHost(String[] positons, Game game){
