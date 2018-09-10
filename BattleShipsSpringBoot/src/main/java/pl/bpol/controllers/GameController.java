@@ -3,10 +3,8 @@ package pl.bpol.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,7 +22,7 @@ import pl.bpol.service.GameService;
 import pl.bpol.service.PlayerService;
 
 @Controller
-@SessionAttributes({ "name", "gameName" })
+@SessionAttributes({ "name", "gameName", "ships" })
 public class GameController {
 
 	private GameService gameService;
@@ -63,34 +61,32 @@ public class GameController {
 	public String sendForm(ModelMap modelMap, @ModelAttribute FieldsForm fieldsForm) {
 		List<String> positionsList = fieldsForm.getPositions();
 		String[] positions = positionsList.toArray(new String[0]);
-		// if(positions.length>20){
-		// modelMap.addAttribute("wrongNumberOfChecks","Zaznaczono zbyt wiele pól");
-		// } else if (positions.length<20){
-		// modelMap.addAttribute("wrongNumberOfChecks","Zaznaczono zbyt mało pól");
-		// } else {
-		// if(gameService.checkShipsLocations(positions)) {
-		// if
-		// (modelMap.get("name").toString().equals(modelMap.get("gameName").toString()))
-		// {
-		// System.out.println("git");
-		// gameService.setShipsLocationForHost(positions,gameService.getGameByHostName(modelMap.get("name").toString()));
-		// modelMap.addAttribute("hostShips",gameService.getGameByHostName(modelMap.get("name").toString()).getHostShips());
-		// return "battle";
-		// } else {
-		// gameService.setShipsLocationForGuest(positions,gameService.getGameByHostName(modelMap.get("gameName").toString()));
-		// modelMap.addAttribute("guestShips",gameService.getGameByHostName(modelMap.get("gameName").toString()).getHostShips());
-		// return "battle";
-		// }
-		// }
-		// else {
-		// modelMap.addAttribute("wrongPlacement", "Błędne rozmieszczenie statków.
-		// Pomiędzy każdym statkiem powinno znajdować się jedno pole odstępu.");
-		// }
-		// }
+		 if(positions.length>20){
+		 modelMap.addAttribute("wrongNumberOfChecks","Zaznaczono zbyt wiele pól");
+		 } else if (positions.length<20){
+		 modelMap.addAttribute("wrongNumberOfChecks","Zaznaczono zbyt mało pól");
+		 } else {
+		 if(gameService.checkShipsLocations(positions)) {
+		 if
+		 (modelMap.get("name").toString().equals(modelMap.get("gameName").toString()))
+		 {
+		 System.out.println("git");
+		 gameService.setShipsLocationForHost(positions,gameService.getGameByHostName(modelMap.get("name").toString()));
+		 modelMap.addAttribute("ships",gameService.getGameByHostName(modelMap.get("name").toString()).getHostShips());
+		 return "battle";
+		 } else {
+		 gameService.setShipsLocationForGuest(positions,gameService.getGameByHostName(modelMap.get("gameName").toString()));
+		 modelMap.addAttribute("ships",gameService.getGameByHostName(modelMap.get("gameName").toString()).getHostShips());
+		 return "battle";
+		 }
+		 }
+		 else {
+		 modelMap.addAttribute("wrongPlacement", "Błędne rozmieszczenie statków. Pomiędzy każdym statkiem powinno znajdować się jedno pole odstępu.");
+		 }
+		 }
 
 		System.out.println(positionsList);
-		// return "game";
-		return "battle";
+		return "game";
 	}
 
 	@RequestMapping(value = "game/battle", method = RequestMethod.GET)

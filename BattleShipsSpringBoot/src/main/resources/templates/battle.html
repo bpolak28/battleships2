@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <title>Bitwa!</title>
 <style>
+	img{
+	margin: 0px;
+	padding: 0px;
+	height: 30px;
+	width: 30px;
+	}
+	td{
+	text-align: center;
+	margin: 0px;
+	padding: 0px;
+	height: 30px;
+	width: 30px;
+	}
 	#response {
 		width: 500px;
 		height: 100px;
@@ -13,6 +26,21 @@
 	.battlefield {
 		display: inline-block;
 		border: solid black 1px;
+		background-color: navy;
+		color: white;
+	}
+	.field {
+		width: 100%;
+		height: 100%;
+		padding: 0px;
+		margin: 0px;
+		background-color: white;
+	}
+	#myMap{
+		display: inline-block;
+	}
+	#enemyMap{
+		display: inline-block;
 	}
 </style>
 </head>
@@ -25,6 +53,7 @@
         	<p>plansza</p>
         </div>
             <br />
+            
             <br />
             
             <div id="conversationDiv">
@@ -80,28 +109,96 @@
         	document.getElementById('response').scrollTop=1e6;
         	document.getElementById('text').value = "";
         }
-        
-        var generate = "<table><tr>";
-        
-        var numOfRow = "1";
-        
-        var i;
-        
-        for (i=0;i<10;i++){
-        	if(i==0){
-        		generate += "</tr><tr>";
-        	} else if(i==1){
-        		generate += "<td>"+numOfRow+"</td>";
-        		
-        	} else {
-        		generate += "<td><input type='button' th:value='A1' class='field' /></td>";
-        	}
+  
+        function buildMyMap(){
+        	
+        	var generate = "<table><tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td><td>I</td><td>J</td>";
+            
+            var numOfRow = 1;
+            
+            var letters = "ABCDEFGHIJ";
+            
+            var letter;
+            
+            var i;
+            
+            var nextNumberOfField
+            for (var j=1;j<11;j++){
+            	
+            	nextNumberOfField = j;
+            	
+            	for (i=0;i<12;i++){
+            		
+            		letter = letters.charAt(i-2);
+                	
+                	if(i==0){
+                		generate += "</tr><tr>";
+                	} else if(i==1){
+                		generate += "<td>"+numOfRow+"</td>";
+                		
+                	} else {
+                		generate += "<td><input type=\"button\" value=\""+letter+nextNumberOfField+"\" class=\"field\" id=\"Y"+letter+nextNumberOfField+"\" /></td>";
+                	}
+                	
+                }
+            	numOfRow++;
+            }
+            generate+="</tr></table>";
+            
+            document.getElementById("myMap").innerHTML=generate;
         }
         
-        generate+="</tr></table>";
-        document.getElementById("myMap").innerHTML=generate;
+		function buildEnemyMap(){
+        	
+        	var generate = "<table><tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td><td>I</td><td>J</td>";
+            
+            var numOfRow = 1;
+            
+            var letters = "ABCDEFGHIJ";
+            
+            var letter;
+            
+            var i;
+            
+            var nextNumberOfField
+            for (var j=1;j<11;j++){
+            	
+            	nextNumberOfField = j;
+            	
+            	for (i=0;i<12;i++){
+            		
+            		letter = letters.charAt(i-2);
+                	
+                	if(i==0){
+                		generate += "</tr><tr>";
+                	} else if(i==1){
+                		generate += "<td>"+numOfRow+"</td>";
+                		
+                	} else {
+                		generate += "<td><div class=\"field\" id=\"M"+letter+nextNumberOfField+"\"></div></td>";
+                	}
+                	
+                }
+            	numOfRow++;
+            }
+            generate+="</tr></table>";
+            
+            document.getElementById("enemyMap").innerHTML=generate;
+        }
+		
+		function putMyShips(){
+			
+			for(var i=0;i<[[${session.ships}]].length;i++){
+				document.getElementById("M"+[[${session.ships}]][i].location).innerHTML="<img src=\"/statek3.jpg\" alt=\"X\" >";
+			}
+			
+		}
         
-        console.log(5+6);
+        buildMyMap();
+   
+        buildEnemyMap();
+        
+        putMyShips();
         /*]]>*/
         </script>
 </body>
