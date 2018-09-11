@@ -4,14 +4,21 @@
 	<meta charset="UTF-8">
     <title>Rozmieszczenie</title>
     <style>
+    	table{
+    		border: solid black 1px;
+    		border-collapse: collapse;
+    	}
         td {
+        	border: solid black 1px;
             text-align: center;
-            border: solid 1px black;
             width: 20px;
             height: 20px;
             background-color: floralwhite;
+            padding: 0px;
+            margin: 0px;
         }
         .checkfield:checked{
+        	cursor: pointer;
             -webkit-appearance: none;
             -moz-appearance: none;
             background-color: red;
@@ -21,6 +28,9 @@
             padding: 0;
         }
         .checkfield{
+        	border: none;
+        	vertical-align: bottom;
+        	cursor: pointer;
             -webkit-appearance: none;
             -moz-appearance: none;
             background-color: lightblue;
@@ -28,7 +38,6 @@
             height: 20px;
             margin: 0;
             padding: 0;
-
         }
 
     </style>
@@ -45,7 +54,7 @@
 <h3 th:text="${wrongNumberOfChecks}"></h3>
 <br>
 <form method="post" th:action="'/battle/'+${session.name}" th:object="${fieldsForm}">
-<table style="text-align: center; border: solid 1px black;">
+<table>
     <tr>
         <td>X</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td><td>I</td><td>J</td>
     </tr>

@@ -4,18 +4,27 @@
 <meta charset="UTF-8">
 <title>Bitwa!</title>
 <style>
+	div{
+		margin: 0px;
+		padding: 0px;
+		border-spacing: 0px;
+	}
 	img{
-	margin: 0px;
-	padding: 0px;
-	height: 30px;
-	width: 30px;
+		margin: 0px;
+		padding: 0px;
+		height: 30px;
+		width: 30px;
+		border-spacing: 0px;
+		vertical-align: bottom;
 	}
 	td{
-	text-align: center;
-	margin: 0px;
-	padding: 0px;
-	height: 30px;
-	width: 30px;
+		text-align: center;
+		margin: 0px;
+		padding: 0px;
+		height: 30px;
+		max-height: 30px;
+		width: 30px;
+		border-spacing: 0px;
 	}
 	#response {
 		width: 500px;
@@ -30,17 +39,22 @@
 		color: white;
 	}
 	.field {
+		text-align: center;
 		width: 100%;
 		height: 100%;
 		padding: 0px;
 		margin: 0px;
 		background-color: white;
+		border-spacing: 0px;
 	}
 	#myMap{
 		display: inline-block;
 	}
 	#enemyMap{
 		display: inline-block;
+	}
+	button {
+		cursor: pointer;
 	}
 </style>
 </head>
@@ -137,7 +151,7 @@
                 		generate += "<td>"+numOfRow+"</td>";
                 		
                 	} else {
-                		generate += "<td><input type=\"button\" value=\""+letter+nextNumberOfField+"\" class=\"field\" id=\"Y"+letter+nextNumberOfField+"\" /></td>";
+                		generate += "<td><button value=\""+letter+nextNumberOfField+"\" class=\"field\" id=\"Y"+letter+nextNumberOfField+"\" onclick=\"sendMessage();\"></button></td>";
                 	}
                 	
                 }
@@ -189,7 +203,7 @@
 		function putMyShips(){
 			
 			for(var i=0;i<[[${session.ships}]].length;i++){
-				document.getElementById("M"+[[${session.ships}]][i].location).innerHTML="<img src=\"/statek3.jpg\" alt=\"X\" >";
+				document.getElementById("M"+[[${session.ships}]][i].location).innerHTML="<img src=\"/statek3.jpg\" alt=\"X\" />";
 			}
 			
 		}
