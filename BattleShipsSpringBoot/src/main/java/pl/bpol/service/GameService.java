@@ -2,12 +2,14 @@ package pl.bpol.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import pl.bpol.exception.NoSuchPlayerExeption;
+import pl.bpol.model.Field;
 import pl.bpol.model.Game;
 import pl.bpol.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Component
@@ -394,5 +396,71 @@ public class GameService {
         }
         return indexesOfFourFieldShip;
     }
+
+	public String executeShot(String fromPlayer, String target) throws NoSuchPlayerExeption {
+		
+		Game game = this.games.stream().filter(g -> g.getHost().getName().equals(fromPlayer)).findFirst().orElse(null);
+		if(game!=null) {
+			return findGuestField(game,target);
+		} else {
+			game = this.games.stream().filter(g -> g.getGuest().getName().equals(fromPlayer)).findFirst().orElse(null);
+		}
+		if(game==null) {
+			System.err.println("There is no game with that host/guest.");
+			throw new NoSuchPlayerExeption();
+		} else {
+			return findHostField(game,target);
+		}
+	}
+
+	private String findGuestField(Game game, String target) {
+		List<Field> ships = game.getGuestShips();
+		for (Field field : ships) {
+			if(field.getLocation().equals(target)){
+				if(!field.isHit()){
+					field.setHit(true);
+					System.out.println("hit!");
+					return "hit";
+				} else {
+					System.out.println("field already is hit");
+					return "error";
+				}
+				
+			}
+		}
+		return "mishit";	
+	}
+
+	private String findHostField(Game game, String target) {
+		List<Field> ships = game.getHostShips();
+		for (Field field : ships) {
+			if(field.getLocation().equals(target)){
+				if(!field.isHit()){
+					field.setHit(true);
+					System.out.println("hit!");
+					return "hit";
+				} else {
+					System.out.println("field already is hit");
+					return "error";
+				}
+				
+			}
+		}
+		return "mishit";
+		
+	}
+
+	public boolean checkBothPlayersAreAdded(String gameName) {
+		Game game;
+		game = games.stream().filter(g -> gameName.equals(g.getGameHostName())).findFirst().orElse(null);
+		if(game.getHost()!=null&&game.getGuest()!=null) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
+    
+    
 
 }

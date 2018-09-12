@@ -72,6 +72,7 @@
             
             <div id="conversationDiv">
             	<input type="text" id="from" th:value="${session.name}"></input>
+            	<input type="text" id="gameName" th:value="${session.gameName}"></input>
             	<p>Globalny czat</p>
                 <div id="chat">
                 <p id="response"></p>
@@ -88,6 +89,8 @@
         /*<![CDATA[*/
         var stompClient = null;
         
+        var stompClientForShots = null;
+        
         var link = [[${session.gameName}]];
 
         var socket = new SockJS('/chat');
@@ -98,15 +101,41 @@
         		showMessageOutput(JSON.parse(messageOutput.body));
         	});
         });
+        
+        var socketShots = new SockJS('/shot');
+        stompClientForShots = Stomp.over(socketShots);
+        stompClientForShots.connect({}, function(frame) {
+        	console.log('Connected: ' + frame);
+        	stompClientForShots.subscribe('/shots', function(messageOutput) {
+        		showShotOutput(JSON.parse(messageOutput.body));
+        	});
+        });
 
         document.getElementById('from').style.visibility = 'hidden';
+        document.getElementById('gameName').style.visibility = 'hidden';
+
 
         function sendMessage() {
         	var from = document.getElementById('from').value;
         	var text = document.getElementById('text').value;
+        	var gameName = document.getElementById('gameName').value;
         	stompClient.send("/app/chat", {}, JSON.stringify({
+        		'message' : text,
         		'fromPlayer' : from,
-        		'message' : text
+        		'gameName': gameName
+        	}));
+        	
+        	
+        }
+        
+        function sendShot(target) {
+        	var from = document.getElementById('from').value;
+        	var text = target;
+        	var gameName = document.getElementById('gameName').value;
+        	stompClientForShots.send("/app/shot", {}, JSON.stringify({
+        		'message' : text,
+        		'fromPlayer' : from,
+        		'gameName': gameName
         	}));
         	
         	
@@ -122,6 +151,12 @@
         	response.appendChild(p);
         	document.getElementById('response').scrollTop=1e6;
         	document.getElementById('text').value = "";
+        }
+        
+        function showShotOutput(messageOutput) {
+        	console.log(messageOutput.fromPlayer + " shots: "
+        			+ messageOutput.message);
+        	
         }
   
         function buildMyMap(){
@@ -151,7 +186,7 @@
                 		generate += "<td>"+numOfRow+"</td>";
                 		
                 	} else {
-                		generate += "<td><button value=\""+letter+nextNumberOfField+"\" class=\"field\" id=\"Y"+letter+nextNumberOfField+"\" onclick=\"sendMessage();\"></button></td>";
+                		generate += "<td><button value=\""+letter+nextNumberOfField+"\" class=\"field\" id=\"Y"+letter+nextNumberOfField+"\" onclick=\"sendShot('"+letter+nextNumberOfField+"');\"></button></td>";
                 	}
                 	
                 }

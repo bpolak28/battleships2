@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import pl.bpol.exception.NoSuchPlayerExeption;
 import pl.bpol.form.FieldsForm;
 import pl.bpol.model.Game;
 import pl.bpol.model.OutputMessage;
@@ -77,7 +78,7 @@ public class GameController {
 		 return "battle";
 		 } else {
 		 gameService.setShipsLocationForGuest(positions,gameService.getGameByHostName(modelMap.get("gameName").toString()));
-		 modelMap.addAttribute("ships",gameService.getGameByHostName(modelMap.get("gameName").toString()).getHostShips());
+		 modelMap.addAttribute("ships",gameService.getGameByHostName(modelMap.get("gameName").toString()).getGuestShips());
 		 return "battle";
 		 }
 		 }
@@ -103,5 +104,24 @@ public class GameController {
 		System.out.println(message.getMessage());
 		return new OutputMessage(message.getMessage(), message.getFromPlayer());
 	}
+	
 
+	@MessageMapping("/shot")
+	@SendTo("/shots")
+	public OutputMessage myShotsHendler(WebSocketMessage message) {
+		System.out.println(message.getGameName());
+		if(gameService.checkBothPlayersAreAdded(message.getGameName())) {
+			System.out.println(message.getMessage());
+			String result = "Błąd";
+			try {
+				result = gameService.executeShot(message.getFromPlayer(),message.getMessage());
+			} catch (NoSuchPlayerExeption e) {
+				e.printStackTrace();
+			}
+			return new OutputMessage(result+" "+message.getMessage(), message.getFromPlayer());
+		} else {
+			return new OutputMessage("Przeciwnik nie jest jeszcze w grze",message.getFromPlayer());
+		}
+		
+	}
 }
