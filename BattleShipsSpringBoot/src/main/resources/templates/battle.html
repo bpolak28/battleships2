@@ -71,8 +71,7 @@
             <br />
             
             <div id="conversationDiv">
-            	<input type="text" id="from" th:value="${session.name}"></input>
-            	<input type="text" id="gameName" th:value="${session.gameName}"></input>
+            	
             	<p>Globalny czat</p>
                 <div id="chat">
                 <p id="response"></p>
@@ -91,7 +90,8 @@
         
         var stompClientForShots = null;
         
-        var link = [[${session.gameName}]];
+        var gameName = [[${session.gameName}]];
+        var playerName = [[${session.name}]];
 
         var socket = new SockJS('/chat');
         stompClient = Stomp.over(socket);
@@ -111,17 +111,12 @@
         	});
         });
 
-        document.getElementById('from').style.visibility = 'hidden';
-        document.getElementById('gameName').style.visibility = 'hidden';
-
 
         function sendMessage() {
-        	var from = document.getElementById('from').value;
         	var text = document.getElementById('text').value;
-        	var gameName = document.getElementById('gameName').value;
         	stompClient.send("/app/chat", {}, JSON.stringify({
         		'message' : text,
-        		'fromPlayer' : from,
+        		'fromPlayer' : playerName,
         		'gameName': gameName
         	}));
         	
@@ -129,12 +124,10 @@
         }
         
         function sendShot(target) {
-        	var from = document.getElementById('from').value;
         	var text = target;
-        	var gameName = document.getElementById('gameName').value;
         	stompClientForShots.send("/app/shot", {}, JSON.stringify({
         		'message' : text,
-        		'fromPlayer' : from,
+        		'fromPlayer' : playerName,
         		'gameName': gameName
         	}));
         	

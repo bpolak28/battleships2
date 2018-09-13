@@ -415,24 +415,16 @@ public class GameService {
 
 	private String findGuestField(Game game, String target) {
 		List<Field> ships = game.getGuestShips();
-		for (Field field : ships) {
-			if(field.getLocation().equals(target)){
-				if(!field.isHit()){
-					field.setHit(true);
-					System.out.println("hit!");
-					return "hit";
-				} else {
-					System.out.println("field already is hit");
-					return "error";
-				}
-				
-			}
-		}
-		return "mishit";	
+		return checkFields(ships, target);
 	}
 
 	private String findHostField(Game game, String target) {
 		List<Field> ships = game.getHostShips();
+		return checkFields(ships, target);
+		
+	}
+	
+	private String checkFields(List<Field> ships, String target){
 		for (Field field : ships) {
 			if(field.getLocation().equals(target)){
 				if(!field.isHit()){
@@ -447,7 +439,6 @@ public class GameService {
 			}
 		}
 		return "mishit";
-		
 	}
 
 	public boolean checkBothPlayersAreAdded(String gameName) {
