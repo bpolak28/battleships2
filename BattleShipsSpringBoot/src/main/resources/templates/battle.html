@@ -66,6 +66,7 @@
         <div id="enemyMap" class="battlefield">
         	<p>plansza</p>
         </div>
+        <p id="information"></p>
             <br />
             
             <br />
@@ -147,6 +148,42 @@
         }
         
         function showShotOutput(messageOutput) {
+        	var player = messageOutput.fromPlayer;
+        	var game = messageOutput.gameName;
+        	var text = messageOutput.message;
+        	var arr = text.split(" ");
+        	console.log(arr);
+        	if(game==gameName){
+        		if(player==playerName){
+                	if(arr[0]=="Przeciwnik"){
+                		document.getElementById("information").innerHTML="Przeciwnik jeszcze nie dołączył do gry.";
+                	}else if(arr[1]=="hit"){
+                		if(arr.length==3){
+                			document.getElementById("information").innerHTML="Trafiłeś i zatopiłeś statek!";
+                		}else{
+                			document.getElementById("information").innerHTML="Trafiłeś, ale statek nadal płynie.";
+                		}
+                	}else if(arr[1]=="mishit"){
+                		document.getElementById("information").innerHTML="Pudło.";
+                	}else if(arr[1]=="error"){
+                		document.getElementById("information").innerHTML="W to miejsce już było strzelane.";
+                	}
+            	}else{
+                	if(arr[1]=="hit"){
+                		if(arr.length==3){
+                			document.getElementById("information").innerHTML="Przeciwnik trafił i zatopił Twój statek!";
+                		}else{
+                			document.getElementById("information").innerHTML="Przeciwnik trafił Twój statek.";
+                		}
+                	}else if(arr[1]=="mishit"){
+                		document.getElementById("information").innerHTML="Przeciwnik spudłował.";
+                	}else if(arr[1]=="error"){
+                		document.getElementById("information").innerHTML="Przeciwnik strzela w miejsce gdzie już strzelał.";
+                	}
+            	}
+        	}
+        	
+        	
         	console.log(messageOutput.fromPlayer + " shots: "
         			+ messageOutput.message);
         	

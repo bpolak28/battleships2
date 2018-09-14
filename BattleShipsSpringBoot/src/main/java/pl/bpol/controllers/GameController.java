@@ -108,7 +108,7 @@ public class GameController {
 
 	@MessageMapping("/shot")
 	@SendTo("/shots")
-	public OutputMessage myShotsHendler(WebSocketMessage message) {
+	public WebSocketMessage myShotsHendler(WebSocketMessage message) {
 		System.out.println(message.getGameName());
 		if(gameService.checkBothPlayersAreAdded(message.getGameName())) {
 			System.out.println(message.getMessage());
@@ -118,9 +118,9 @@ public class GameController {
 			} catch (NoSuchPlayerExeption e) {
 				e.printStackTrace();
 			}
-			return new OutputMessage(message.getMessage()+" "+result, message.getFromPlayer());
+			return new WebSocketMessage(message.getMessage()+" "+result, message.getFromPlayer(), message.getGameName());
 		} else {
-			return new OutputMessage("Przeciwnik nie jest jeszcze w grze",message.getFromPlayer());
+			return new WebSocketMessage("Przeciwnik nie jest jeszcze w grze",message.getFromPlayer(), message.getGameName());
 		}
 		
 	}
