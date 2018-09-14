@@ -1,5 +1,7 @@
 package pl.bpol.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,7 +12,7 @@ import pl.bpol.service.GameService;
 import pl.bpol.service.PlayerService;
 
 @Controller
-@SessionAttributes("name")
+@SessionAttributes({"name","incorrectName","hello"})
 public class StartController {
 
     @Autowired
@@ -27,6 +29,17 @@ public class StartController {
 
     @RequestMapping(value = "statki", method = RequestMethod.POST)
     public String sendName(String name, ModelMap modelMap){
+    	List<Player> players = playerService.getPlayers();
+    	if((name.equals("")||name==null)){
+			modelMap.addAttribute("incorrectName", "Nie podano imienia.");
+			return "hello";
+    	}
+    	for(Player player: players) {
+    		if(player.getName().equals(name)) {
+    			modelMap.addAttribute("incorrectName", "Imię zajęte, wybierz inne.");
+    			return "hello";
+    		}
+    	}
         Player player = playerService.createPlayer(name);
         modelMap.addAttribute("name",player.getName());
         return "redirect:gameslist";

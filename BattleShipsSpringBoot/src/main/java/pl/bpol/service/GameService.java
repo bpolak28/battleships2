@@ -82,12 +82,12 @@ public class GameService {
         }
         for(Integer twoShip:twoFieldsShips){
             game.getHostShips().stream()
-                    .filter(field -> field.getType().equals("twoFieldShip") && field.getLocation() == null)
+                    .filter(field -> (field.getType().equals("firstTwoFieldShip") || field.getType().equals("secondTwoFieldShip") || field.getType().equals("thirdTwoFieldShip")) && field.getLocation() == null)
                     .findFirst().ifPresent(field -> field.setLocation(positons[twoShip]));
         }
         for(Integer threeShip:threeFieldsShips){
             game.getHostShips().stream()
-                    .filter(field -> field.getType().equals("threeFieldShip") && field.getLocation() == null)
+                    .filter(field -> (field.getType().equals("firstThreeFieldShip") || field.getType().equals("secondThreeFieldShip")) && field.getLocation() == null)
                     .findFirst().ifPresent(field -> field.setLocation(positons[threeShip]));
         }
         for(Integer fourShip:fourFieldsShip){
@@ -111,12 +111,12 @@ public class GameService {
         }
         for(Integer twoShip:twoFieldsShips){
             game.getGuestShips().stream()
-                    .filter(field -> field.getType().equals("twoFieldShip") && field.getLocation() == null)
+            		.filter(field -> (field.getType().equals("firstTwoFieldShip") || field.getType().equals("secondTwoFieldShip") || field.getType().equals("thirdTwoFieldShip")) && field.getLocation() == null)
                     .findFirst().ifPresent(field -> field.setLocation(positons[twoShip]));
         }
         for(Integer threeShip:threeFieldsShips){
             game.getGuestShips().stream()
-                    .filter(field -> field.getType().equals("threeFieldShip") && field.getLocation() == null)
+            		.filter(field -> (field.getType().equals("firstThreeFieldShip") || field.getType().equals("secondThreeFieldShip")) && field.getLocation() == null)
                     .findFirst().ifPresent(field -> field.setLocation(positons[threeShip]));
         }
         for(Integer fourShip:fourFieldsShip){
@@ -429,8 +429,14 @@ public class GameService {
 			if(field.getLocation().equals(target)){
 				if(!field.isHit()){
 					field.setHit(true);
-					System.out.println("hit!");
-					return "hit";
+					if(isShipIsSunk(field, ships)) {
+						System.out.println("hit destroyed");
+						return "hit destroyed";
+					} else {
+						System.out.println("hit!");
+						return "hit";
+					}
+					
 				} else {
 					System.out.println("field already is hit");
 					return "error";
@@ -439,6 +445,21 @@ public class GameService {
 			}
 		}
 		return "mishit";
+	}
+	
+	private boolean isShipIsSunk(Field field, List<Field> ships) {
+		if(field.getType().equals("oneFieldShip")){
+			return true;
+		}else {
+			List<Field> ship = new ArrayList<>();
+			ships.stream().filter(s -> s.getType().equals(field.getType())).forEach(ship::add);
+			for (Field shipField : ship) {
+				if(!shipField.isHit()) {
+					return false;
+				}
+			}
+			return true;
+		}
 	}
 
 	public boolean checkBothPlayersAreAdded(String gameName) {

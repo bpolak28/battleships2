@@ -60,7 +60,7 @@ public class GameController {
 
 	@RequestMapping(value = "battle/{gameName}", method = RequestMethod.POST)
 	public String sendForm(ModelMap modelMap, @ModelAttribute FieldsForm fieldsForm) {
-//		List<String> positionsList = fieldsForm.getPositions();
+		List<String> positionsList = fieldsForm.getPositions();
 //		String[] positions = positionsList.toArray(new String[0]);
 		String[] positions = {"A1", "B1", "D1", "F1", "G1", "I1", "J1", "A2", "B2", "D2", "F2", "D3", "I3", "J3", "G4", "A5", "C5", "E5", "G5", "E8"};
 		 if(positions.length>20){
@@ -118,7 +118,7 @@ public class GameController {
 			} catch (NoSuchPlayerExeption e) {
 				e.printStackTrace();
 			}
-			return new OutputMessage(result+" "+message.getMessage(), message.getFromPlayer());
+			return new OutputMessage(message.getMessage()+" "+result, message.getFromPlayer());
 		} else {
 			return new OutputMessage("Przeciwnik nie jest jeszcze w grze",message.getFromPlayer());
 		}
