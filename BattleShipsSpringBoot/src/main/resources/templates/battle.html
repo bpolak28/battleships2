@@ -110,6 +110,7 @@
         	stompClientForShots.subscribe('/shots', function(messageOutput) {
         		showShotOutput(JSON.parse(messageOutput.body));
         	});
+        	sendShot("Enemy joined");
         });
 
 
@@ -157,28 +158,33 @@
         		if(player==playerName){
                 	if(arr[0]=="Przeciwnik"){
                 		document.getElementById("information").innerHTML="Przeciwnik jeszcze nie dołączył do gry.";
+                	
                 	}else if(arr[1]=="hit"){
                 		if(arr.length==3){
-                			document.getElementById("information").innerHTML="Trafiłeś i zatopiłeś statek!";
+                			document.getElementById("information").innerHTML="Trafiłeś i zatopiłeś statek! Strzelaj dalej";
                 		}else{
-                			document.getElementById("information").innerHTML="Trafiłeś, ale statek nadal płynie.";
+                			document.getElementById("information").innerHTML="Trafiłeś, ale statek nadal płynie. Strzelaj dalej";
                 		}
                 	}else if(arr[1]=="mishit"){
-                		document.getElementById("information").innerHTML="Pudło.";
+                		document.getElementById("information").innerHTML="Pudło. Kolej przeciwnika";
                 	}else if(arr[1]=="error"){
-                		document.getElementById("information").innerHTML="W to miejsce już było strzelane.";
+                		document.getElementById("information").innerHTML="W to miejsce już było strzelane. Strzelaj dalej";
+                	}else if(arr[0]=="Tura"){
+                		document.getElementById("information").innerHTML="Kolej przeciwnika.";
                 	}
             	}else{
                 	if(arr[1]=="hit"){
                 		if(arr.length==3){
-                			document.getElementById("information").innerHTML="Przeciwnik trafił i zatopił Twój statek!";
+                			document.getElementById("information").innerHTML="Przeciwnik trafił i zatopił Twój statek! Kolej przeciwnika";
                 		}else{
-                			document.getElementById("information").innerHTML="Przeciwnik trafił Twój statek.";
+                			document.getElementById("information").innerHTML="Przeciwnik trafił Twój statek. Kolej przeciwnika";
                 		}
                 	}else if(arr[1]=="mishit"){
-                		document.getElementById("information").innerHTML="Przeciwnik spudłował.";
+                		document.getElementById("information").innerHTML="Przeciwnik spudłował. Twoja kolej";
                 	}else if(arr[1]=="error"){
-                		document.getElementById("information").innerHTML="Przeciwnik strzela w miejsce gdzie już strzelał.";
+                		document.getElementById("information").innerHTML="Przeciwnik strzela w miejsce gdzie już strzelał. Kolej przeciwnika";
+                	}else if(arr[0]=="Enemy"){
+                		document.getElementById("information").innerHTML="Przeciwnik dołączył do gry. Twój ruch";
                 	}
             	}
         	}
@@ -281,6 +287,8 @@
         buildEnemyMap();
         
         putMyShips();
+        
+        
         /*]]>*/
         </script>
 </body>

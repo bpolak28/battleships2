@@ -69,18 +69,15 @@ public class GameController {
 		 modelMap.addAttribute("wrongNumberOfChecks","Zaznaczono zbyt mało pól");
 		 } else {
 		 if(gameService.checkShipsLocations(positions)) {
-		 if
-		 (modelMap.get("name").toString().equals(modelMap.get("gameName").toString()))
-		 {
-		 System.out.println("git");
-		 gameService.setShipsLocationForHost(positions,gameService.getGameByHostName(modelMap.get("name").toString()));
-		 modelMap.addAttribute("ships",gameService.getGameByHostName(modelMap.get("name").toString()).getHostShips());
-		 return "battle";
-		 } else {
-		 gameService.setShipsLocationForGuest(positions,gameService.getGameByHostName(modelMap.get("gameName").toString()));
-		 modelMap.addAttribute("ships",gameService.getGameByHostName(modelMap.get("gameName").toString()).getGuestShips());
-		 return "battle";
-		 }
+			 if(modelMap.get("name").toString().equals(modelMap.get("gameName").toString())) {
+			 gameService.setShipsLocationForHost(positions,gameService.getGameByHostName(modelMap.get("name").toString()));
+			 modelMap.addAttribute("ships",gameService.getGameByHostName(modelMap.get("name").toString()).getHostShips());
+			 return "battle";
+			 } else {
+			 gameService.setShipsLocationForGuest(positions,gameService.getGameByHostName(modelMap.get("gameName").toString()));
+			 modelMap.addAttribute("ships",gameService.getGameByHostName(modelMap.get("gameName").toString()).getGuestShips());
+			 return "battle";
+			 }
 		 }
 		 else {
 		 modelMap.addAttribute("wrongPlacement", "Błędne rozmieszczenie statków. Pomiędzy każdym statkiem powinno znajdować się jedno pole odstępu.");
@@ -110,18 +107,26 @@ public class GameController {
 	@SendTo("/shots")
 	public WebSocketMessage myShotsHendler(WebSocketMessage message) {
 		System.out.println(message.getGameName());
-		if(gameService.checkBothPlayersAreAdded(message.getGameName())) {
-			System.out.println(message.getMessage());
-			String result = "Błąd";
-			try {
-				result = gameService.executeShot(message.getFromPlayer(),message.getMessage());
-			} catch (NoSuchPlayerExeption e) {
-				e.printStackTrace();
-			}
-			return new WebSocketMessage(message.getMessage()+" "+result, message.getFromPlayer(), message.getGameName());
-		} else {
-			return new WebSocketMessage("Przeciwnik nie jest jeszcze w grze",message.getFromPlayer(), message.getGameName());
+		String turn = gameService.whoseTurn(message.getGameName());
+		if((message.getMessage().equals("Enemy joined"))&&(!message.getFromPlayer().toString().equals(message.getGameName().toString()))) {
+			return new WebSocketMessage("Enemy joined",message.getFromPlayer(),message.getGameName());
 		}
+		if(turn.equals(message.getFromPlayer())) {
+			if(gameService.checkBothPlayersAreAdded(message.getGameName())) {
+				System.out.println(message.getMessage());
+				String result = "Błąd";
+				try {
+					result = gameService.executeShot(message.getFromPlayer(),message.getMessage());
+				} catch (NoSuchPlayerExeption e) {
+					e.printStackTrace();
+				}
+				return new WebSocketMessage(message.getMessage()+" "+result, message.getFromPlayer(), message.getGameName());
+			} else {
+				return new WebSocketMessage("Przeciwnik nie jest jeszcze w grze",message.getFromPlayer(), message.getGameName());
+			}
+		} else {
+			return new WebSocketMessage("Tura przeciwnika",message.getFromPlayer(),message.getGameName());
+		}	
 		
 	}
 }

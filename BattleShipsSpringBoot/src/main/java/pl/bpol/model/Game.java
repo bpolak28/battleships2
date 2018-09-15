@@ -14,6 +14,8 @@ public class Game {
     private Player guest;
 
     private List<Field> guestShips = new ArrayList<>();
+    
+    private String playersTurn;
 
     public Game(){
 
@@ -24,6 +26,16 @@ public class Game {
         this.hostShips = hostShips;
         this.guest = guest;
         this.guestShips = guestShips;
+        this.playersTurn = host.getName();
+        this.gameHostName = host.getName();
+    }
+    
+    public Game(Player host) {
+        this.host = host;
+        setHostShips(hostShips);
+        setGuestShips(guestShips);
+        this.gameHostName = host.getName();
+        this.playersTurn = host.getName();
     }
 
     public String getGameHostName() {
@@ -51,12 +63,6 @@ public class Game {
         this.guestShips = createShips(guestShips);
     }
 
-    public Game(Player host) {
-        this.host = host;
-        setHostShips(hostShips);
-        setGuestShips(guestShips);
-    }
-
     public Player getHost() {
         return host;
     }
@@ -81,7 +87,23 @@ public class Game {
                 '}';
     }
 
-    private List<Field> createShips(List<Field> ships){
+    public String getPlayersTurn() {
+		return playersTurn;
+	}
+
+	public void setPlayersTurn(String playersTurn) {
+		this.playersTurn = playersTurn;
+	}
+	
+	public void changeTurn() {
+		if(playersTurn.equals(host.getName())) {
+			this.playersTurn = guest.getName();
+		} else {
+			this.playersTurn = host.getName();
+		}
+	}
+
+	private List<Field> createShips(List<Field> ships){
         ships.add(new Field("oneFieldShip"));
         ships.add(new Field("oneFieldShip"));
         ships.add(new Field("oneFieldShip"));

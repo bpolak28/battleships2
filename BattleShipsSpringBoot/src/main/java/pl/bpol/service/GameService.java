@@ -401,7 +401,11 @@ public class GameService {
 		
 		Game game = this.games.stream().filter(g -> g.getHost().getName().equals(fromPlayer)).findFirst().orElse(null);
 		if(game!=null) {
-			return findGuestField(game,target);
+			String reply = findGuestField(game,target);
+			if(reply.equals("mishit")) {
+				game.changeTurn();	
+			}
+			return reply;
 		} else {
 			game = this.games.stream().filter(g -> g.getGuest().getName().equals(fromPlayer)).findFirst().orElse(null);
 		}
@@ -409,7 +413,11 @@ public class GameService {
 			System.err.println("There is no game with that host/guest.");
 			throw new NoSuchPlayerExeption();
 		} else {
-			return findHostField(game,target);
+			String reply = findHostField(game,target);
+			if(reply.equals("mishit")) {
+				game.changeTurn();	
+			}
+			return reply;
 		}
 	}
 
@@ -471,6 +479,10 @@ public class GameService {
 			return false;
 		}
 		
+	}
+	
+	public String whoseTurn(String gameName) {
+		return games.stream().filter(g -> g.getGameHostName().equals(gameName)).findFirst().get().getPlayersTurn();
 	}
     
     
