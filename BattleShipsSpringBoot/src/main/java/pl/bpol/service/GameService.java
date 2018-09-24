@@ -434,12 +434,13 @@ public class GameService {
 	
 	private String checkFields(List<Field> ships, String target){
 		for (Field field : ships) {
-			if(field.getLocation().equals(target)){
+			if(target.equals(field.getLocation())){
 				if(!field.isHit()){
 					field.setHit(true);
 					if(isShipIsSunk(field, ships)) {
 						System.out.println("hit destroyed");
-						return "hit destroyed";
+						String type = field.getType();
+						return "hit "+type;
 					} else {
 						System.out.println("hit!");
 						return "hit";

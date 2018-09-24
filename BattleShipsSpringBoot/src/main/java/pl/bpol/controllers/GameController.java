@@ -46,16 +46,22 @@ public class GameController {
 	}
 
 	@RequestMapping(value = "game/{gameName}")
-	public String enterGame(ModelMap modelMap, @PathVariable("gameName") String gameName,
+	public String enterGame(ModelMap modelMap, @PathVariable("gameName") String pathGameName,
 			@ModelAttribute("name") String name) {
-		modelMap.addAttribute("gameName", gameName);
-		Game game = gameService.getGameByHostName(gameName);
+		Game game = gameService.getGameByHostName(pathGameName);
 		if (!game.getGameHostName().equals(name)) {
 			if (game.getGuest() == null) {
+				modelMap.addAttribute("gameName", pathGameName);
 				game.setGuest(playerService.getPlayerByName(name));
+				return "game";
+			} else {
+				return "redirect:/gameslist";
 			}
+		} else {
+			modelMap.addAttribute("gameName", pathGameName);
+			return "game";
 		}
-		return "game";
+		
 	}
 
 	@RequestMapping(value = "battle/{gameName}", method = RequestMethod.POST)

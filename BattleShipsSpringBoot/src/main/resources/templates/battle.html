@@ -12,8 +12,8 @@
 	img{
 		margin: 0px;
 		padding: 0px;
-		height: 30px;
-		width: 30px;
+		width: 100%;
+    	height: auto;
 		border-spacing: 0px;
 		vertical-align: bottom;
 	}
@@ -54,17 +54,24 @@
 		display: inline-block;
 	}
 	button {
-		cursor: pointer;
+	cursor: pointer;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: bottom;
 	}
 </style>
 </head>
 <body >
         <div id="conteiner">
+        <div>Pozostałe statki do zestrzelenia:</div>
+        <div id="leftShips">Jednomasztowe: <div id="oneLeftShip">4</div></div>
         <div id="myMap" class="battlefield">
-        	<p>plansza</p>
+        	<p>wczytuję...</p>
         </div>
         <div id="enemyMap" class="battlefield">
-        	<p>plansza</p>
+        	<p>wczytuję...</p>
         </div>
         <p id="information"></p>
             <br />
@@ -162,11 +169,21 @@
                 	}else if(arr[1]=="hit"){
                 		if(arr.length==3){
                 			document.getElementById("information").innerHTML="Trafiłeś i zatopiłeś statek! Strzelaj dalej";
+                			markDestroyedShip(arr[3]);
+                			var x = document.getElementById("Y"+arr[0]);
+                			x.innerHTML="<img src=\"/wybuch.png\" alt=\"X\" />";
+                			x.disabled = true;
                 		}else{
                 			document.getElementById("information").innerHTML="Trafiłeś, ale statek nadal płynie. Strzelaj dalej";
+                			var x = document.getElementById("Y"+arr[0]);
+                			x.innerHTML="<img src=\"/wybuch.png\" alt=\"X\" />";
+                			x.disabled = true;
                 		}
                 	}else if(arr[1]=="mishit"){
                 		document.getElementById("information").innerHTML="Pudło. Kolej przeciwnika";
+                		var x = document.getElementById("Y"+arr[0]);
+            			x.innerHTML="<img src=\"/kropa.png\" alt=\"X\" />";
+            			x.disabled = true;
                 	}else if(arr[1]=="error"){
                 		document.getElementById("information").innerHTML="W to miejsce już było strzelane. Strzelaj dalej";
                 	}else if(arr[0]=="Tura"){
@@ -176,11 +193,17 @@
                 	if(arr[1]=="hit"){
                 		if(arr.length==3){
                 			document.getElementById("information").innerHTML="Przeciwnik trafił i zatopił Twój statek! Kolej przeciwnika";
+                			var x = document.getElementById("M"+arr[0]);
+                			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
                 		}else{
                 			document.getElementById("information").innerHTML="Przeciwnik trafił Twój statek. Kolej przeciwnika";
+                			var x = document.getElementById("M"+arr[0]);
+                			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
                 		}
                 	}else if(arr[1]=="mishit"){
                 		document.getElementById("information").innerHTML="Przeciwnik spudłował. Twoja kolej";
+                		var x = document.getElementById("M"+arr[0]);
+            			x.innerHTML="<img src=\"/kropa.png\" alt=\"X\" />";
                 	}else if(arr[1]=="error"){
                 		document.getElementById("information").innerHTML="Przeciwnik strzela w miejsce gdzie już strzelał. Kolej przeciwnika";
                 	}else if(arr[0]=="Enemy"){
@@ -278,6 +301,35 @@
 			for(var i=0;i<obj.length;i++){
 				console.log(obj[i].location);
 				document.getElementById("M"+obj[i].location).innerHTML="<img src=\"/statek3.jpg\" alt=\"X\" />";
+			}
+			
+		}
+		
+		var oneFieldLeftShips = 4;
+		
+		function markTwo(){
+			if(shipType=="oneFieldShip"){
+				oneFieldLeftShips--;
+				document.getElementById("oneLeftShip").innerHTML=oneFieldLeftShips;
+			}else if(!shipType.indexOf("two")<0){
+				console.log("weszlo w 2");
+			}else if(!shipType.indexOf("three")<0){
+				console.log("weszlo w 3");
+			}else if(shipType=="fourFieldShip"){
+				console.log("weszlo w 4");
+			}else{
+				console.log("cos poszlo nie tak");
+			}
+		}
+		
+		function markDestroyedShip(shipType){
+			switch(shipType) {
+		    case "oneFieldShip":
+		    	console.log("weszlo w swicza");
+		    	oneFieldLeftShips--;
+				document.getElementById("oneLeftShip").innerHTML=oneFieldLeftShips;
+		        break;
+		    default:
 			}
 			
 		}
