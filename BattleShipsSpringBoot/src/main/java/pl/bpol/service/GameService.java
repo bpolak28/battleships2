@@ -404,6 +404,8 @@ public class GameService {
 			String reply = findGuestField(game,target);
 			if(reply.equals("mishit")) {
 				game.changeTurn();	
+			} else if(reply.endsWith("victory")) {
+				games.remove(game);
 			}
 			return reply;
 		} else {
@@ -416,6 +418,8 @@ public class GameService {
 			String reply = findHostField(game,target);
 			if(reply.equals("mishit")) {
 				game.changeTurn();	
+			}else if(reply.endsWith("victory")) {
+				games.remove(game);
 			}
 			return reply;
 		}
@@ -437,9 +441,18 @@ public class GameService {
 			if(target.equals(field.getLocation())){
 				if(!field.isHit()){
 					field.setHit(true);
+					
 					if(isShipIsSunk(field, ships)) {
-						System.out.println("hit destroyed");
 						String type = field.getType();
+						String gameEnd = "victory";
+						for(Field field2 : ships) {
+							if(!field2.isHit()) {
+								gameEnd = "nope";
+							}
+						}
+						if(gameEnd.equals("victory")) {
+							return "hit "+type+" "+gameEnd;
+						}
 						return "hit "+type;
 					} else {
 						System.out.println("hit!");
