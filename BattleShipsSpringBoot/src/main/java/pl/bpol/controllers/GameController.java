@@ -1,6 +1,7 @@
 package pl.bpol.controllers;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -11,7 +12,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import pl.bpol.exception.NoSuchPlayerExeption;
@@ -94,17 +94,10 @@ public class GameController {
 		return "game";
 	}
 
-	@RequestMapping(value = "game/battle", method = RequestMethod.GET)
-	public String hitAction(ModelMap modelMap, @RequestParam("target") String target) {
-		System.out.println(target);
-		return "battle";
-	}
-
 	@MessageMapping("/chat")
 	@SendTo("/topic")
 	public OutputMessage myMessageHendler(WebSocketMessage message) {
 
-		System.out.println(message.getMessage());
 		return new OutputMessage(message.getMessage(), message.getFromPlayer());
 	}
 	
@@ -112,14 +105,18 @@ public class GameController {
 	@MessageMapping("/shot")
 	@SendTo("/shots")
 	public WebSocketMessage myShotsHendler(WebSocketMessage message) {
-		System.out.println(message.getGameName());
-		String turn = gameService.whoseTurn(message.getGameName());
+		String turn;
+		try {
+			turn = gameService.whoseTurn(message.getGameName());
+		} catch(NoSuchElementException e) {
+			return new WebSocketMessage("Nie odnaleziono gry",message.getFromPlayer(),message.getGameName());
+		}
+		
 		if((message.getMessage().equals("Enemy joined"))&&(!message.getFromPlayer().toString().equals(message.getGameName().toString()))) {
 			return new WebSocketMessage("Enemy joined",message.getFromPlayer(),message.getGameName());
 		}
 		if(turn.equals(message.getFromPlayer())) {
 			if(gameService.checkBothPlayersAreAdded(message.getGameName())) {
-				System.out.println(message.getMessage());
 				String result = "Błąd";
 				try {
 					result = gameService.executeShot(message.getFromPlayer(),message.getMessage());

@@ -96,7 +96,6 @@ public class GameService {
                     .findFirst().ifPresent(field -> field.setLocation(positons[fourShip]));
         }
 
-        game.getHostShips().forEach(System.out::println);
     }
 
     public void setShipsLocationForGuest(String[] positons, Game game){
@@ -125,7 +124,6 @@ public class GameService {
                     .findFirst().ifPresent(field -> field.setLocation(positons[fourShip]));
         }
 
-        game.getGuestShips().forEach(System.out::println);
     }
 
     public char[] getColumns(String[] positions){
@@ -155,10 +153,6 @@ public class GameService {
         List<Integer> result2 = getTwoFieldsShips(positions);
         List<Integer> result3 = getThreeFieldsShips(positions);
         List<Integer> result4 = getFourFieldsShip(positions);
-        System.out.println(result);
-        System.out.println(result2);
-        System.out.println(result3);
-        System.out.println(result4);
 
         if(result.size()==4&&result2.size()==6&&result3.size()==6&&result4.size()==4){
             return true;
@@ -444,29 +438,30 @@ public class GameService {
 					
 					if(isShipIsSunk(field, ships)) {
 						String type = field.getType();
-						String gameEnd = "victory";
-						for(Field field2 : ships) {
-							if(!field2.isHit()) {
-								gameEnd = "nope";
-							}
-						}
-						if(gameEnd.equals("victory")) {
-							return "hit "+type+" "+gameEnd;
+						if(isItEnd(ships)) {
+							return "hit "+type+" victory";
 						}
 						return "hit "+type;
 					} else {
-						System.out.println("hit!");
 						return "hit";
 					}
 					
 				} else {
-					System.out.println("field already is hit");
 					return "error";
 				}
 				
 			}
 		}
 		return "mishit";
+	}
+
+	private boolean isItEnd(List<Field> ships) {
+		for(Field field2 : ships) {
+			if(!field2.isHit()) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	private boolean isShipIsSunk(Field field, List<Field> ships) {
