@@ -54,7 +54,7 @@ public class StartController {
     @RequestMapping(value = "newgame")
     public String newGame(ModelMap modelMap){
         gameService.addGameByPlayerName(modelMap.get("name").toString());
-        return "redirect:gameslist";
+        return "redirect:game/"+modelMap.get("name");
     }
 
 

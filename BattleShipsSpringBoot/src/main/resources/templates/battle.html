@@ -100,7 +100,7 @@
         </div>
         <p id="information"></p>
             <br />
-            
+            <div id="finito" style="visibility: hidden;">Aby zagrać ponownie kliknij w <a href="/statki">TUTAJ</a> i ponownie wybierz imię oraz grę. </div>
             <br />
             
             <div id="conversationDiv">
@@ -134,6 +134,7 @@
         		showMessageOutput(JSON.parse(messageOutput.body));
         	});
         });
+        
         
         var socketShots = new SockJS('/shot');
         stompClientForShots = Stomp.over(socketShots);
@@ -205,6 +206,7 @@
                 			var x = document.getElementById("Y"+arr[0]);
                 			x.innerHTML="<img src=\"/wybuch2.png\" alt=\"X\" />";
                 			x.disabled = true;
+                			document.getElementById("finito").style.visibility="visible";
                 		}else{
                 			document.getElementById("information").innerHTML="Trafiłeś, ale statek nadal płynie. Strzelaj dalej";
                 			var x = document.getElementById("Y"+arr[0]);
@@ -233,6 +235,7 @@
                 			document.getElementById("information").innerHTML="Przeciwnik trafił i zatopił Twój statek! Przegrywasz grę";
                 			var x = document.getElementById("M"+arr[0]);
                 			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
+                			document.getElementById("finito").style.visibility="visible";
                 		}else{
                 			document.getElementById("information").innerHTML="Przeciwnik trafił Twój statek. Kolej przeciwnika";
                 			var x = document.getElementById("M"+arr[0]);
