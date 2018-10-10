@@ -6,7 +6,7 @@
 	<groupId>pl.bpol</groupId>
 	<artifactId>BattleShipsSpringBoot</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>BattleShipsSpringBoot</name>
 	<description>BattleShips project in Spring Boot</description>
@@ -76,7 +76,6 @@
     		<artifactId>h2</artifactId>
     		<scope>test</scope>
 		</dependency>
-		
 		
 	</dependencies>
 
