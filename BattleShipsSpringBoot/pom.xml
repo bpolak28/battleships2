@@ -85,19 +85,10 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>repackage</goal>
-						</goals>
-					</execution>
-				</executions>
+				<configuration>
+					<appName>statki-springboot</appName>
+				</configuration>
 			</plugin>
-			<plugin>
-        		<groupId>com.google.appengine</groupId>
-        		<artifactId>appengine-maven-plugin</artifactId>
-        		<version>1.9.60</version>
-      		</plugin>
 		</plugins>
 	</build>
 
