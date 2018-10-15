@@ -20,6 +20,11 @@ public class StartController {
 
     @Autowired
     private GameService gameService;
+    
+    @RequestMapping("/")
+    public String hello() {
+    	return "statki";
+    }
 
     @RequestMapping(value = "statki",method = RequestMethod.GET)
     public String hello(ModelMap modelMap){
