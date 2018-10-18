@@ -42,7 +42,7 @@
 
     </style>
 </head>
-<body>
+<body style="text-align: center;">
 <div th:if="${session.name==session.gameName}">
     <h2 th:text="${session.name} + ', grasz jako gospodarz.'"></h2>
 </div>
@@ -53,8 +53,8 @@
 <br>
 <h3 th:text="${wrongNumberOfChecks}"></h3>
 <br>
-<form method="post" th:action="'/battle/'+${session.name}" th:object="${fieldsForm}">
-<table>
+<form method="post" th:action="'/battle/'+${session.name}" th:object="${fieldsForm}" >
+<table style="margin: auto;">
     <tr>
         <td>X</td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td><td>I</td><td>J</td>
     </tr>

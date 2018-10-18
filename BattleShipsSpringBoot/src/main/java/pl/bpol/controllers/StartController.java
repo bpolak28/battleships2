@@ -23,7 +23,7 @@ public class StartController {
     
     @RequestMapping("/")
     public String hello() {
-    	return "statki";
+    	return "index";
     }
 
     @RequestMapping(value = "statki",method = RequestMethod.GET)
