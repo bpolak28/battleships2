@@ -1,26 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-	<meta charset="UTF-8">
-    <title>Dostępne gry</title>
-</head>
-<body style="text-align: center;">
-<h1 th:text="'Witaj '+${name}"></h1>
-<br>
-<p><a href="newgame">Stwórz nową grę</a></p>
-<p>
-        Każdy może stworzyć tylko jedną grę.
-</p>
-<br>
-<h2>Dostępna lista gier:</h2>
-<br>
-<table>
-<th:block th:each="game : ${games}">
-	<tr>
-		<td><a th:href="'game/'+${game.host.name}" th:text="'Gra stworzona przez: '+${game.host.name}"></a></td>
-	</tr>
-</th:block>
-</table>
-<br>
-</body>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	    <title>Lista dostępnych gier</title>
+	</head>
+	<body class="bg-info text-light" style="text-align: center;">
+		<div class="display-4 my-2" th:text="'Witaj '+${name}"></div>
+		<p>Możesz dołączyć do gry z poniższej listy lub stworzyć nową grę</p>
+		<br>
+		<table class="table table-borderless">
+			<th:block th:each="game : ${games}">
+				<tr>
+					<td><a class="row badge badge-dark" th:href="'game/'+${game.host.name}" th:text="'Dołącz do gry stworzonej przez: '+${game.host.name}"></a></td>
+				</tr>
+			</th:block>
+		</table>
+		<p><a class="h4 badge badge-warning" href="newgame">Stwórz nową grę</a></p>
+		<br>
+		
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	</body>
 </html>

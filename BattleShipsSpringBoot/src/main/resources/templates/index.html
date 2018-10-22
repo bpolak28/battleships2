@@ -10,8 +10,12 @@
 		<div class="container">
 			<section style="margin: auto; text-align: center;">
 				<h1 class="display-1" style="margin-top: 50px">Statki!</h1>
-				<p class="lead">Witaj w aplikacji gry w statki dla dwóch osób. Aby zagrać kliknj na przycisk poniżej.</p>
-				<a href="/statki" role="button" class="btn btn-dark btn-lg" >Przejdź do gry</a>
+				<p class="lead">Witaj w aplikacji gry w statki dla dwóch osób. Aby zagrać podaj imię i kliknij na przycisk poniżej.</p>
+				<form method="POST" class="form-row justify-content-center">
+				    <input type="text" name="name" class="form-control col-4 col-md-3 mr-1">
+				    <button type="submit" class="btn btn-dark form-control col-2">Dalej</button>
+				</form>
+				<p class="mt-1" style="color: #ffcccc" th:text=${incorrectName}></p>
 			</section>
 			<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 		    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

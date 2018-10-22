@@ -26,23 +26,17 @@ public class StartController {
     	return "index";
     }
 
-    @RequestMapping(value = "statki",method = RequestMethod.GET)
-    public String hello(ModelMap modelMap){
-        modelMap.addAttribute("hello","Witaj w grze w statki");
-        return "hello";
-    }
-
-    @RequestMapping(value = "statki", method = RequestMethod.POST)
+    @RequestMapping(value = "/", method = RequestMethod.POST)
     public String sendName(String name, ModelMap modelMap){
     	List<Player> players = playerService.getPlayers();
     	if((name.equals("")||name==null)){
 			modelMap.addAttribute("incorrectName", "Nie podano imienia.");
-			return "hello";
+			return "index";
     	}
     	for(Player player: players) {
     		if(player.getName().equals(name)) {
     			modelMap.addAttribute("incorrectName", "Imię zajęte, wybierz inne.");
-    			return "hello";
+    			return "index";
     		}
     	}
         Player player = playerService.createPlayer(name);
