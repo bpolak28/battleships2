@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-	<meta charset="UTF-8">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <title>Rozmieszczenie</title>
     <style>
     	table{
@@ -9,10 +11,11 @@
     		border-collapse: collapse;
     	}
         td {
+        	color: black;
         	border: solid black 1px;
             text-align: center;
-            width: 20px;
-            height: 20px;
+            width: 35px;
+            height: 35px;
             background-color: floralwhite;
             padding: 0px;
             margin: 0px;
@@ -22,8 +25,8 @@
             -webkit-appearance: none;
             -moz-appearance: none;
             background-color: red;
-            width: 20px;
-            height: 20px;
+            width: 100%;
+            height: 100%;
             margin: 0;
             padding: 0;
         }
@@ -34,25 +37,50 @@
             -webkit-appearance: none;
             -moz-appearance: none;
             background-color: lightblue;
-            width: 20px;
-            height: 20px;
+            width: 100%;
+            height: 100%;
             margin: 0;
             padding: 0;
         }
+        .checkfield:hover{
+        	border: none;
+        	vertical-align: bottom;
+        	cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-color: #76bdd5;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .checkfield:checked:hover{
+        	border: none;
+        	vertical-align: bottom;
+        	cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-color: #b30000;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
 
     </style>
 </head>
-<body style="text-align: center;">
+<body data-spy="scroll" data-target="#scrollid" class="bg-info text-light" style="text-align: center;">
+<div class="container">
 <div th:if="${session.name==session.gameName}">
     <h2 th:text="${session.name} + ', grasz jako gospodarz.'"></h2>
 </div>
-
 <div th:if="${session.gameName!=session.name}">
     <h2 th:text="${session.name} + ', grasz jako gość.'"></h2>
 </div>
-<br>
-<h3 th:text="${wrongNumberOfChecks}"></h3>
-<br>
+<p>Zaznacz odpowiednie pola aby rozstawić swoje statki: <a class="badge badge-pill badge-light" href="#czteromasztowe">1 czteromasztowy</a> <a class="badge badge-pill badge-light" href="#trojmasztowe">2 trójmasztowe</a> <a class="badge badge-pill badge-light" href="#dwumasztowe">3 dwumasztowe</a> <a class="badge badge-pill badge-light" href="#jednomasztowe">4 jednomasztowe</a></p>
+<p style="color: #ffff80" th:text="${wrongNumberOfChecks}"></p>
+<p style="color: #ffff80" th:text="${wrongPlacement}"></p>
 <form method="post" th:action="'/battle/'+${session.name}" th:object="${fieldsForm}" >
 <table style="margin: auto;">
     <tr>
@@ -65,7 +93,7 @@
         <td>2</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I2" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J2" class="checkfield" /></td>
     </tr>
     <tr>
-        <td>3</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A3" class="checkfield" th:checked="${true}" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J3" class="checkfield" /></td>
+        <td>3</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I3" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J3" class="checkfield" /></td>
     </tr>
     <tr>
         <td>4</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I4" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J4" class="checkfield" /></td>
@@ -89,8 +117,46 @@
         <td>10</td><td><input type="checkbox" th:field="${fieldsForm.positions}" th:value="A10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="B10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="C10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="D10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="E10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="F10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="G10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="H10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="I10" class="checkfield" /></td><td><input type="checkbox" th:field="${fieldsForm.positions}" value="J10" class="checkfield" /></td>
     </tr>
 </table>
-    <p><input type="submit"></p>
+    <button type="submit" class="btn btn-outline-dark mt-2">Potwierdzam ustawienie</button>
 </form>
-<h3 th:text="${wrongPlacement}" style="color: blue"></h3>
+<br/>
+<div id="scrollid" class="row justify-content-center no-gutters" style="margin: 0; padding: 0;">
+	<p id="czteromasztowe" class="mt-3 mb-2">Przykładowe możliwe ustawienia statków czteromasztowych:</p>
+	<div class="w-100"></div>
+	<div class="col-4 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka1.png"></div>
+	<div class="col-4 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka2.png"></div>
+	<div class="col-4 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka3.png"></div>
+	<div class="col-4 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka4.png"></div>
+	<div class="col-4 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka5.png"></div>
+	<div class="col-4 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka6.png"></div>
+	<div class="col-4 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka7.png"></div>
+	<div class="col-4 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka8.png"></div>
+	<p id="trojmasztowe" class="mt-3 mb-2">Przykładowe możliwe ustawienia statków trójmasztowych:</p>
+	<div class="w-100"></div>
+	<div class="col-6 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka9.png"></div>
+	<div class="col-6 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka10.png"></div>
+	<div class="col-6 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka11.png"></div>
+	<div class="col-6 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka12.png"></div>
+	<p id="dwumasztowe" class="mt-3 mb-2">Przykładowe możliwe ustawienia statków dwumasztowych:</p>
+	<div class="w-100"></div>
+	<div class="col-6 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka13.png"></div>
+	<div class="col-6 col-sm-4 col-md-3 mb-2"><img class="img-fluid" src="/siatka14.png"></div>
+	<div class="w-100"></div>
+	<p id="jednomasztowe" class="mt-3 mb-2">Przykładowe możliwe ustawienia statków jednomasztowych:</p>
+	<div class="w-100"></div>
+	<div class="col-12 mb-2"><img class="img-fluid" src="/siatka15.png"></div>
+</div>
+</div>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script th:inline="javascript">
+/*<![CDATA[*/
+$(function () {
+	  $('[data-toggle="tooltip"]').tooltip()
+	  html: true
+	})
+/*]]>*/
+</script>
 </body>
 </html>
