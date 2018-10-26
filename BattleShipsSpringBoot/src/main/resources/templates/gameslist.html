@@ -12,12 +12,15 @@
 		<br>
 		<table class="table table-borderless">
 			<th:block th:each="game : ${games}">
-				<tr>
-					<td><a class="row badge badge-dark" style="font-size: 20px" th:href="'game/'+${game.host.name}" th:text="'Dołącz do gry stworzonej przez: '+${game.host.name}"></a></td>
+				<tr th:if="${game.guest==null}">
+					<td><a class="row btn btn-dark" style="font-size: 20px; padding-top: 0; padding-bottom: 0; padding-left: 10px; padding-right: 10px;" th:href="'game/'+${game.host.name}" th:text="'Dołącz do gry stworzonej przez '+${game.host.name}"></a></td>
+				</tr>
+				<tr th:if="${game.guest!=null}">
+					<td><a class="row btn btn-dark disabled" style="font-size: 20px; padding-top: 0; padding-bottom: 0; padding-left: 10px; padding-right: 10px;" th:href="'game/'+${game.host.name}" th:text="'Gra stworzona przez '+${game.host.name}+' jest już zajęta'"></a></td>
 				</tr>
 			</th:block>
 		</table>
-		<p><a class="badge badge-warning" style="font-size: 20px" href="newgame">Stwórz nową grę</a></p>
+		<p><a class="btn btn-warning" style="font-size: 20px; padding-top: 0; padding-bottom: 0; padding-left: 10px; padding-right: 10px;" href="newgame">Stwórz nową grę</a></p>
 		<br>
 		
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
