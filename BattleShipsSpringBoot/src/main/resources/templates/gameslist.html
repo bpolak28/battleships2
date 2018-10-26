@@ -13,11 +13,11 @@
 		<table class="table table-borderless">
 			<th:block th:each="game : ${games}">
 				<tr>
-					<td><a class="row badge badge-dark" th:href="'game/'+${game.host.name}" th:text="'Dołącz do gry stworzonej przez: '+${game.host.name}"></a></td>
+					<td><a class="row badge badge-dark" style="font-size: 20px" th:href="'game/'+${game.host.name}" th:text="'Dołącz do gry stworzonej przez: '+${game.host.name}"></a></td>
 				</tr>
 			</th:block>
 		</table>
-		<p><a class="h4 badge badge-warning" href="newgame">Stwórz nową grę</a></p>
+		<p><a class="badge badge-warning" style="font-size: 20px" href="newgame">Stwórz nową grę</a></p>
 		<br>
 		
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
