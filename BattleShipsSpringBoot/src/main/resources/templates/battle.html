@@ -1,384 +1,449 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8">
-<title>Bitwa!</title>
-<style>
-	#container{
-		text-align: center;
-	}
-	div{
-		margin: 0px;
-		padding: 0px;
-		border-spacing: 0px;
-	}
-	img{
-		margin: 0px;
-		padding: 0px;
-		width: 100%;
-    	height: auto;
-		border-spacing: 0px;
-		vertical-align: bottom;
-	}
-	td{
-		text-align: center;
-		margin: 0px;
-		padding: 0px;
-		height: 30px;
-		max-height: 30px;
-		width: 30px;
-		border-spacing: 0px;
-	}
-	#response {
-		width: 500px;
-		height: 100px;
-		overflow-y: scroll;
-		overflow-x: auto;
-		margin: auto;
-		text-align: left;
-		padding-left: 50px;
-	}
-	.battlefield {
-		display: inline-block;
-		border: solid black 1px;
-		background-color: navy;
-		color: white;
-	}
-	.field {
-		text-align: center;
-		width: 100%;
-		height: 100%;
-		padding: 0px;
-		margin: 0px;
-		background-color: white;
-		border-spacing: 0px;
-	}
-	#myMap{
-		display: inline-block;
-	}
-	#enemyMap{
-		display: inline-block;
-	}
-	button {
-	cursor: pointer;
-    border: none;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    vertical-align: bottom;
-	}
-	.leftShips{
-	width: 150px;
-	display: inline-block;
-	}
-	.ships{
-	display: inline-block;
-	animation-name: example;
-    animation-duration: 2s;
-	}
-	@keyframes example {
-    0% {color: black;}
-    25% {color: red;}
-    50% {font-size: 20px;}
-    75% {color: red;}
-    100% {color: black;}
-    }
-</style>
-</head>
-<body >
-        <div id="container">
-        <div style="display: inline-block;"><div>Pozostałe statki do zestrzelenia:</div>
-        <div><div class="leftShips"><div id="oneLeftShip" style="display: inline-block;">Jednomasztowe: 4</div></div>
-        <div class="leftShips"><div id="twoLeftShip" style="display: inline-block;">Dwumasztowe: 3</div></div></div>
-        <div><div class="leftShips"><div id="threeLeftShip" style="display: inline-block;">Trójmasztowe: 2</div></div>
-        <div class="leftShips"><div id="fourLeftShip" style="display: inline-block;">Czteromasztowe: 1</div></div></div>
-        <div id="myMap" class="battlefield">
-        	<p>wczytuję...</p>
-        </div></div>
-        <div id="enemyMap" class="battlefield">
-        	<p>wczytuję...</p>
-        </div>
-        <p id="information"></p>
-            <br />
-            <div id="finito" style="visibility: hidden;">Aby zagrać ponownie kliknij w <a href="/statki">TUTAJ</a> i ponownie wybierz imię oraz grę. </div>
-            <br />
-            
-            <div id="conversationDiv">
-            	
-            	<p>Globalny czat</p>
-                <div id="chat" style="text-align: center;">
-                <p id="response"></p>
-                <input style="min-width:250px" type="text" id="text" placeholder="Napisz coś do innych graczy..."/>
-                <button id="sendMessage" onclick="sendMessage();">Send</button>
-                </div>
-                
-                
-            </div>
-        </div>
-        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-		<script src="/webjars/stomp-websocket/stomp.min.js"></script>
-        <script th:inline="javascript">
-        /*<![CDATA[*/
-        var stompClient = null;
-        
-        var stompClientForShots = null;
-        
-        var gameName = [[${session.gameName}]];
-        var playerName = [[${session.name}]];
-
-        var socket = new SockJS('/chat');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function(frame) {
-        	console.log('Connected: ' + frame);
-        	stompClient.subscribe('/topic', function(messageOutput) {
-        		showMessageOutput(JSON.parse(messageOutput.body));
-        	});
-        });
-        
-        
-        var socketShots = new SockJS('/shot');
-        stompClientForShots = Stomp.over(socketShots);
-        stompClientForShots.connect({}, function(frame) {
-        	console.log('Connected: ' + frame);
-        	stompClientForShots.subscribe('/shots', function(messageOutput) {
-        		showShotOutput(JSON.parse(messageOutput.body));
-        	});
-        	sendShot("Enemy joined");
-        });
-
-
-        function sendMessage() {
-        	var text = document.getElementById('text').value;
-        	stompClient.send("/app/chat", {}, JSON.stringify({
-        		'message' : text,
-        		'fromPlayer' : playerName,
-        		'gameName': gameName
-        	}));
-        	
-        	
-        }
-        
-        function sendShot(target) {
-        	var text = target;
-        	stompClientForShots.send("/app/shot", {}, JSON.stringify({
-        		'message' : text,
-        		'fromPlayer' : playerName,
-        		'gameName': gameName
-        	}));
-        	
-        	
-        }
-
-        function showMessageOutput(messageOutput) {
-        	var response = document.getElementById('response');
-        	console.log(messageOutput.fromPlayer + ": "
-        			+ messageOutput.message);
-        	var p = document.createElement('p');
-        	p.style.color="green";
-        	p.appendChild(document.createTextNode(messageOutput.fromPlayer + ": "
-        			+ messageOutput.message));
-        	response.appendChild(p);
-        	document.getElementById('response').scrollTop=1e6;
-        	document.getElementById('text').value = "";
-        }
-        
-        function showShotOutput(messageOutput) {
-        	var player = messageOutput.fromPlayer;
-        	var game = messageOutput.gameName;
-        	var text = messageOutput.message;
-        	var arr = text.split(" ");
-        	console.log(arr);
-        	if(game==gameName){
-        		if(player==playerName){
-                	if(arr[0]=="Przeciwnik"){
-                		document.getElementById("information").innerHTML="Przeciwnik jeszcze nie dołączył do gry.";
-                	
-                	}else if(arr[1]=="hit"){
-                		if(arr.length==3){
-                			document.getElementById("information").innerHTML="Trafiłeś i zatopiłeś statek! Strzelaj dalej";
-                			markDestroyedShip(arr[2]);
-                			var x = document.getElementById("Y"+arr[0]);
-                			x.innerHTML="<img src=\"/wybuch2.png\" alt=\"X\" />";
-                			x.disabled = true;
-                		}else if(arr.length==4){
-                			document.getElementById("information").innerHTML="Trafiłeś i zatopiłeś statek! Wygrywasz grę!";
-                			markDestroyedShip(arr[2]);
-                			var x = document.getElementById("Y"+arr[0]);
-                			x.innerHTML="<img src=\"/wybuch2.png\" alt=\"X\" />";
-                			x.disabled = true;
-                			document.getElementById("finito").style.visibility="visible";
-                		}else{
-                			document.getElementById("information").innerHTML="Trafiłeś, ale statek nadal płynie. Strzelaj dalej";
-                			var x = document.getElementById("Y"+arr[0]);
-                			x.innerHTML="<img src=\"/wybuch2.png\" alt=\"X\" />";
-                			x.disabled = true;
-                		}
-                	}else if(arr[1]=="mishit"){
-                		document.getElementById("information").innerHTML="Pudło. Kolej przeciwnika";
-                		var x = document.getElementById("Y"+arr[0]);
-            			x.innerHTML="<img src=\"/kropa.png\" alt=\"X\" />";
-            			x.disabled = true;
-                	}else if(arr[1]=="error"){
-                		document.getElementById("information").innerHTML="W to miejsce już było strzelane. Strzelaj dalej";
-                	}else if(arr[0]=="Tura"){
-                		document.getElementById("information").innerHTML="Kolej przeciwnika.";
-                	}else if(arr[0]=="Enemy"){
-                		document.getElementById("information").innerHTML="Przeciwnik zaczyna.";
-                	}
-            	}else{
-                	if(arr[1]=="hit"){
-                		if(arr.length==3){
-                			document.getElementById("information").innerHTML="Przeciwnik trafił i zatopił Twój statek! Kolej przeciwnika";
-                			var x = document.getElementById("M"+arr[0]);
-                			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
-                		}else if(arr.length==4){
-                			document.getElementById("information").innerHTML="Przeciwnik trafił i zatopił Twój statek! Przegrywasz grę";
-                			var x = document.getElementById("M"+arr[0]);
-                			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
-                			document.getElementById("finito").style.visibility="visible";
-                		}else{
-                			document.getElementById("information").innerHTML="Przeciwnik trafił Twój statek. Kolej przeciwnika";
-                			var x = document.getElementById("M"+arr[0]);
-                			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
-                		}
-                	}else if(arr[1]=="mishit"){
-                		document.getElementById("information").innerHTML="Przeciwnik spudłował. Twoja kolej";
-                		var x = document.getElementById("M"+arr[0]);
-            			x.innerHTML="<img src=\"/kropa.png\" alt=\"X\" />";
-                	}else if(arr[1]=="error"){
-                		document.getElementById("information").innerHTML="Przeciwnik strzela w miejsce gdzie już strzelał. Kolej przeciwnika";
-                	}else if(arr[0]=="Enemy"){
-                		document.getElementById("information").innerHTML="Przeciwnik dołączył do gry. Twój ruch";
-                	}
-            	}
-        	}
-        	
-        	
-        	console.log(messageOutput.fromPlayer + " shots: "
-        			+ messageOutput.message);
-        	
-        }
-  
-        function buildMyMap(){
-        	
-        	var generate = "<table><tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td><td>I</td><td>J</td>";
-            
-            var numOfRow = 1;
-            
-            var letters = "ABCDEFGHIJ";
-            
-            var letter;
-            
-            var i;
-            
-            var nextNumberOfField
-            for (var j=1;j<11;j++){
-            	
-            	nextNumberOfField = j;
-            	
-            	for (i=0;i<12;i++){
-            		
-            		letter = letters.charAt(i-2);
-                	
-                	if(i==0){
-                		generate += "</tr><tr>";
-                	} else if(i==1){
-                		generate += "<td>"+numOfRow+"</td>";
-                		
-                	} else {
-                		generate += "<td><button value=\""+letter+nextNumberOfField+"\" class=\"field\" id=\"Y"+letter+nextNumberOfField+"\" onclick=\"sendShot('"+letter+nextNumberOfField+"');\"></button></td>";
-                	}
-                	
-                }
-            	numOfRow++;
-            }
-            generate+="</tr></table>";
-            
-            document.getElementById("myMap").innerHTML=generate;
-        }
-        
-		function buildEnemyMap(){
-        	
-        	var generate = "<table><tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td><td>I</td><td>J</td>";
-            
-            var numOfRow = 1;
-            
-            var letters = "ABCDEFGHIJ";
-            
-            var letter;
-            
-            var i;
-            
-            var nextNumberOfField
-            for (var j=1;j<11;j++){
-            	
-            	nextNumberOfField = j;
-            	
-            	for (i=0;i<12;i++){
-            		
-            		letter = letters.charAt(i-2);
-                	
-                	if(i==0){
-                		generate += "</tr><tr>";
-                	} else if(i==1){
-                		generate += "<td>"+numOfRow+"</td>";
-                		
-                	} else {
-                		generate += "<td><div class=\"field\" id=\"M"+letter+nextNumberOfField+"\"></div></td>";
-                	}
-                	
-                }
-            	numOfRow++;
-            }
-            generate+="</tr></table>";
-            
-            document.getElementById("enemyMap").innerHTML=generate;
-        }
-		
-		var obj = /*[[${session.ships}]]*/;
-		
-		function putMyShips(){
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<title>Bitwa!</title>
+		<style>
+			div{
+				margin: 0px;
+				padding: 0px;
+				border-spacing: 0px;
+			}
+			img{
+				margin: 0px;
+				padding: 0px;
+				width: 100%;
+		    	height: auto;
+				border-spacing: 0px;
+				vertical-align: bottom;
+			}
+			td{
+				text-align: center;
+				margin: 0px;
+				padding: 0px;
+				height: 35px;
+				width: 35px;
+				border-spacing: 0px;
+				border: solid black 1px;
+			}
+			#response {
+				height: 150px;
+				overflow-y: scroll;
+				overflow-x: auto;
+				margin: auto;
+				text-align: left;
+				padding-left: 25px;
+			}
+			.battlefield {
+				display: inline-block;
+				border: solid black 2px;
+				background-color: navy;
+				color: white;
+				opacity: 0.7;
+				vertical-align: bottom;
+			}
+			.battlefieldactive {
+				display: inline-block;
+				border: solid red 2px;
+				background-color: navy;
+				color: white;
+				vertical-align: bottom;
+			}
+			.field {
+				text-align: center;
+				width: 100%;
+				height: 100%;
+				padding: 0px;
+				margin: 0px;
+				background-color: white;
+				border-spacing: 0px;
+			}
+			#myMap{
+				display: inline-block;
+			}
+			#enemyMap{
+				display: inline-block;
+			}
+			button {
+			cursor: pointer;
+		    border: none;
+		    color: white;
+		    text-align: center;
+		    text-decoration: none;
+		    vertical-align: bottom;
+			}
+			.leftShips{
+			width: 150px;
+			display: inline-block;
+			}
+			.ships{
+			display: inline-block;
+			animation-name: example;
+		    animation-duration: 2s;
+			}
+			@keyframes example {
+		    0% {color: black;}
+		    25% {color: red;}
+		    50% {font-size: 20px;}
+		    75% {color: red;}
+		    100% {color: black;}
+		    }
+		</style>
+	</head>
+	<body class="bg-info text-light" style="text-align: center;">
+			<div class="container" style="text-align: center;">
+		    	<div style="display: inline-block;">
+		    		<div>Pozostałych statków do zestrzelenia:</div>
+		        	<div>
+		        		<div class="leftShips">
+		        			<div id="oneLeftShip" style="display: inline-block;">Jednomasztowe: 4</div>
+		        		</div>
+		        		<div class="leftShips">
+		        			<div id="twoLeftShip" style="display: inline-block;">Dwumasztowe: 3</div>
+		        		</div>
+		        	</div>
+			        <div>
+			        	<div class="leftShips">
+			        		<div id="threeLeftShip" style="display: inline-block;">Trójmasztowe: 2</div>
+			        	</div>
+			        	<div class="leftShips">
+			        		<div id="fourLeftShip" style="display: inline-block;">Czteromasztowe: 1</div>
+			        	</div>
+			        </div>
+			        <div style="background-color: white;">
+				        <div id="myMap" class="battlefield">
+			        		<p>wczytuję...</p>
+			        	</div>
+			        </div>
+		        	<p id="information"></p>
+		        </div>
+		        <div style="display: inline-block;">
+		        	<div style="background-color: white;">
+			        	<div id="enemyMap" class="battlefield">
+				        	<p>wczytuję...</p>
+				        </div>
+		        	</div>
+			        <p id="information2">Rozmieszczenie Twoich statków</p>
+		        </div>
+		        
+		        
+	            <br />
+	            <div id="finito" style="visibility: hidden;">Aby zagrać ponownie kliknij w <a href="/statki">TUTAJ</a> i ponownie wybierz imię oraz grę. </div>
+	            <br />
+	            
+	            <div id="conversationDiv" class="col-sm-12 col-md-9 col-lg-6 bg-dark rounded" style="border: solid black 1px; margin: auto">
+	            	<p class="p-1 m-0">Czat dla wszystkich aktualnie grających</p>
+	                <div id="chat" style="text-align: center;">
+	                	<p id="response" class="bg-light"></p>
+	                	<div class="input-group mb-3 form-group">
+		                	<input class="form-control" type="text" id="text" placeholder="Napisz coś do innych graczy..."/>
+		                	<div class="input-group-append">
+		                		<button class="btn btn-success" type="submit" id="sendMessage" onclick="sendMessage();">Send</button>
+		                	</div>
+	                	</div>
+	                </div>
+	            </div>
+	        </div>
+	        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+			<script src="/webjars/stomp-websocket/stomp.min.js"></script>
+			<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+	        <script th:inline="javascript">
+	        /*<![CDATA[*/
+	        var stompClient = null;
+	        
+	        var stompClientForShots = null;
+	        
+	        var gameName = [[${session.gameName}]];
+	        var playerName = [[${session.name}]];
+	
+	        var socket = new SockJS('/chat');
+	        stompClient = Stomp.over(socket);
+	        stompClient.connect({}, function(frame) {
+	        	console.log('Connected: ' + frame);
+	        	stompClient.subscribe('/topic', function(messageOutput) {
+	        		showMessageOutput(JSON.parse(messageOutput.body));
+	        	});
+	        });
+	        
+	        
+	        var socketShots = new SockJS('/shot');
+	        stompClientForShots = Stomp.over(socketShots);
+	        stompClientForShots.connect({}, function(frame) {
+	        	console.log('Connected: ' + frame);
+	        	stompClientForShots.subscribe('/shots', function(messageOutput) {
+	        		showShotOutput(JSON.parse(messageOutput.body));
+	        	});
+	        	sendShot("Enemy joined");
+	        });
+	
+	
+	        function sendMessage() {
+	        	var text = document.getElementById('text').value;
+	        	stompClient.send("/app/chat", {}, JSON.stringify({
+	        		'message' : text,
+	        		'fromPlayer' : playerName,
+	        		'gameName': gameName
+	        	}));
+	        	
+	        	
+	        }
+	        
+	        function sendShot(target) {
+	        	var text = target;
+	        	stompClientForShots.send("/app/shot", {}, JSON.stringify({
+	        		'message' : text,
+	        		'fromPlayer' : playerName,
+	        		'gameName': gameName
+	        	}));
+	        	
+	        	
+	        }
+	
+	        function showMessageOutput(messageOutput) {
+	        	var response = document.getElementById('response');
+	        	var p = document.createElement('p');
+	        	p.style.color="Black";
+	        	p.className="m-0 p-0 text-wrap";
+	        	p.appendChild(document.createTextNode(messageOutput.fromPlayer + " : "
+	        			+ messageOutput.message));
+	        	response.appendChild(p);
+	        	response.scrollTop=1e6;
+	        	document.getElementById('text').value = "";
+	        }
+	        
+	        function showShotOutput(messageOutput) {
+	        	var player = messageOutput.fromPlayer;
+	        	var game = messageOutput.gameName;
+	        	var text = messageOutput.message;
+	        	var arr = text.split(" ");
+	        	console.log(arr);
+	        	if(game==gameName){
+	        		if(player==playerName){
+	                	if(arr[0]=="Przeciwnik"){
+	                		document.getElementById("information").innerHTML="Przeciwnik jeszcze nie dołączył do gry.";
+	                	
+	                	}else if(arr[1]=="hit"){
+	                		if(arr.length==3){
+	                			document.getElementById("information").innerHTML="Trafiłeś i zatopiłeś statek! Strzelaj dalej";
+	                			markDestroyedShip(arr[2]);
+	                			var x = document.getElementById("Y"+arr[0]);
+	                			x.innerHTML="<img src=\"/wybuch2.png\" alt=\"X\" />";
+	                			x.disabled = true;
+	                		}else if(arr.length==4){
+	                			document.getElementById("information").innerHTML="Trafiłeś i zatopiłeś statek! Wygrywasz grę!";
+	                			document.getElementById("information2").innerHTML="Gratulacje!";
+	                			document.getElementById("myMap").className="battlefield";
+	                			markDestroyedShip(arr[2]);
+	                			var x = document.getElementById("Y"+arr[0]);
+	                			x.innerHTML="<img src=\"/wybuch2.png\" alt=\"X\" />";
+	                			x.disabled = true;
+	                			document.getElementById("finito").style.visibility="visible";
+	                		}else{
+	                			document.getElementById("information").innerHTML="Trafiłeś, ale statek nadal płynie. Strzelaj dalej";
+	                			var x = document.getElementById("Y"+arr[0]);
+	                			x.innerHTML="<img src=\"/wybuch2.png\" alt=\"X\" />";
+	                			x.disabled = true;
+	                		}
+	                	}else if(arr[1]=="mishit"){
+	                		document.getElementById("information").innerHTML="Pudło";
+	                		document.getElementById("information2").innerHTML="Kolej przeciwnika";
+	                		document.getElementById("myMap").className="battlefield";
+	                		document.getElementById("enemyMap").className="battlefieldactive";
+	                		var x = document.getElementById("Y"+arr[0]);
+	            			x.innerHTML="<img src=\"/kropa.png\" alt=\"X\" />";
+	            			x.disabled = true;
+	                	}else if(arr[1]=="error"){
+	                		document.getElementById("information").innerHTML="W to miejsce już było strzelane. Strzelaj dalej";
+	                	}else if(arr[0]=="Tura"){
+	                		document.getElementById("information").innerHTML="Teraz strzela przeciwnik";
+	                	}else if(arr[0]=="Enemy"){
+	                		document.getElementById("information").innerHTML="Przeciwnik zaczyna";
+	                		document.getElementById("enemyMap").className="battlefieldactive";
+	                	}
+	            	}else{
+	                	if(arr[1]=="hit"){
+	                		if(arr.length==3){
+	                			document.getElementById("information2").innerHTML="Przeciwnik trafił i zatopił Twój statek!";
+	                			document.getElementById("information").innerHTML="Kolej przeciwnika";
+	                			var x = document.getElementById("M"+arr[0]);
+	                			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
+	                		}else if(arr.length==4){
+	                			document.getElementById("information2").innerHTML="Straciłeś ostatni statek! Przegrywasz grę";
+	                			document.getElementById("information").innerHTML="Koniec gry";
+	                			document.getElementById("enemyMap").className="battlefield";
+	                			var x = document.getElementById("M"+arr[0]);
+	                			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
+	                			document.getElementById("finito").style.visibility="visible";
+	                		}else{
+	                			document.getElementById("information2").innerHTML="Przeciwnik trafił Twój statek";
+	                			document.getElementById("information").innerHTML="Kolej przeciwnika";
+	                			var x = document.getElementById("M"+arr[0]);
+	                			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
+	                		}
+	                	}else if(arr[1]=="mishit"){
+	                		document.getElementById("information2").innerHTML="Przeciwnik spudłował";
+                			document.getElementById("information").innerHTML="Twoja kolej";
+                			document.getElementById("myMap").className="battlefieldactive";
+                			document.getElementById("enemyMap").className="battlefield";
+	                		var x = document.getElementById("M"+arr[0]);
+	            			x.innerHTML="<img src=\"/kropa.png\" alt=\"X\" />";
+	                	}else if(arr[1]=="error"){
+	                		document.getElementById("information2").innerHTML="Przeciwnik strzela w miejsce gdzie już strzelał";
+                			document.getElementById("information2").innerHTML="Kolej przeciwnika";
+	                	}else if(arr[0]=="Enemy"){
+	                		document.getElementById("information").innerHTML="Przeciwnik dołączył do gry. Twój ruch";
+	                		document.getElementById("myMap").className="battlefieldactive";
+	                	}
+	            	}
+	        	}
+	        	
+	        	
+	        	console.log(messageOutput.fromPlayer + " shots: "
+	        			+ messageOutput.message);
+	        	
+	        }
+	  
+	        function buildMyMap(){
+	        	
+	        	var generate = "<table><tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td><td>I</td><td>J</td>";
+	            
+	            var numOfRow = 1;
+	            
+	            var letters = "ABCDEFGHIJ";
+	            
+	            var letter;
+	            
+	            var i;
+	            
+	            var nextNumberOfField
+	            for (var j=1;j<11;j++){
+	            	
+	            	nextNumberOfField = j;
+	            	
+	            	for (i=0;i<12;i++){
+	            		
+	            		letter = letters.charAt(i-2);
+	                	
+	                	if(i==0){
+	                		generate += "</tr><tr>";
+	                	} else if(i==1){
+	                		generate += "<td>"+numOfRow+"</td>";
+	                		
+	                	} else {
+	                		generate += "<td><button value=\""+letter+nextNumberOfField+"\" class=\"field\" id=\"Y"+letter+nextNumberOfField+"\" onclick=\"sendShot('"+letter+nextNumberOfField+"');\"></button></td>";
+	                	}
+	                	
+	                }
+	            	numOfRow++;
+	            }
+	            generate+="</tr></table>";
+	            
+	            document.getElementById("myMap").innerHTML=generate;
+	        }
+	        
+			function buildEnemyMap(){
+	        	
+	        	var generate = "<table><tr><td></td><td>A</td><td>B</td><td>C</td><td>D</td><td>E</td><td>F</td><td>G</td><td>H</td><td>I</td><td>J</td>";
+	            
+	            var numOfRow = 1;
+	            
+	            var letters = "ABCDEFGHIJ";
+	            
+	            var letter;
+	            
+	            var i;
+	            
+	            var nextNumberOfField
+	            for (var j=1;j<11;j++){
+	            	
+	            	nextNumberOfField = j;
+	            	
+	            	for (i=0;i<12;i++){
+	            		
+	            		letter = letters.charAt(i-2);
+	                	
+	                	if(i==0){
+	                		generate += "</tr><tr>";
+	                	} else if(i==1){
+	                		generate += "<td>"+numOfRow+"</td>";
+	                		
+	                	} else {
+	                		generate += "<td><div class=\"field\" id=\"M"+letter+nextNumberOfField+"\"></div></td>";
+	                	}
+	                	
+	                }
+	            	numOfRow++;
+	            }
+	            generate+="</tr></table>";
+	            
+	            document.getElementById("enemyMap").innerHTML=generate;
+	        }
 			
-			for(var i=0;i<obj.length;i++){
-				console.log(obj[i].location);
-				document.getElementById("M"+obj[i].location).innerHTML="<img src=\"/statek3.jpg\" alt=\"X\" />";
+			var obj = /*[[${session.ships}]]*/;
+			
+			function putMyShips(){
+				
+				for(var i=0;i<obj.length;i++){
+					console.log(obj[i].location);
+					document.getElementById("M"+obj[i].location).innerHTML="<img src=\"/statek3.jpg\" alt=\"X\" />";
+				}
+				
 			}
 			
-		}
-		
-		var oneFieldLeftShips = 4;
-		var twoFieldLeftShips = 3;
-		var threeFieldLeftShips = 2;
-		var fourFieldLeftShips = 1;
-
-		
-		function markDestroyedShip(shipType){
-			if(shipType=="oneFieldShip"){
-				oneFieldLeftShips--;
-				var x = document.getElementById("oneLeftShip");
-				x.innerHTML="<div class='ships'>Jednomasztowe: "+oneFieldLeftShips+"</div>";
-			}else if(shipType.indexOf("Two")>-1){
-				twoFieldLeftShips--;
-				document.getElementById("twoLeftShip").innerHTML="<div class='ships'>Dwumasztowe: "+twoFieldLeftShips+"</div>";
-			}else if(shipType.indexOf("Three")>-1){
-				threeFieldLeftShips--;
-				document.getElementById("threeLeftShip").innerHTML="<div class='ships'>Trójmasztowe: "+threeFieldLeftShips+"</div>";
-			}else if(shipType=="fourFieldShip"){
-				fourFieldLeftShips--;
-				document.getElementById("fourLeftShip").innerHTML="<div class='ships'>Czteromasztowe: "+fourFieldLeftShips+"</div>";
-			}else{
-				console.log("cos poszlo nie tak");
+			var oneFieldLeftShips = 4;
+			var twoFieldLeftShips = 3;
+			var threeFieldLeftShips = 2;
+			var fourFieldLeftShips = 1;
+	
+			
+			function markDestroyedShip(shipType){
+				if(shipType=="oneFieldShip"){
+					oneFieldLeftShips--;
+					var x = document.getElementById("oneLeftShip");
+					x.innerHTML="<div class='ships'>Jednomasztowe: "+oneFieldLeftShips+"</div>";
+					if(oneFieldLeftShips==0){
+						x.innerHTML="<div class='ships'></div>";
+					}
+				}else if(shipType.indexOf("Two")>-1){
+					twoFieldLeftShips--;
+					document.getElementById("twoLeftShip").innerHTML="<div class='ships'>Dwumasztowe: "+twoFieldLeftShips+"</div>";
+					if(twoFieldLeftShips==0){
+						document.getElementById("twoLeftShip").innerHTML="<div class='ships'></div>";
+					}
+				}else if(shipType.indexOf("Three")>-1){
+					threeFieldLeftShips--;
+					document.getElementById("threeLeftShip").innerHTML="<div class='ships'>Trójmasztowe: "+threeFieldLeftShips+"</div>";
+					if(threeFieldLeftShips==0){
+						document.getElementById("threeLeftShip").innerHTML="<div class='ships'></div>";
+					}
+				}else if(shipType=="fourFieldShip"){
+					fourFieldLeftShips--;
+					document.getElementById("fourLeftShip").innerHTML="<div class='ships'>Czteromasztowe: "+fourFieldLeftShips+"</div>";
+					if(fourFieldLeftShips==0){
+						document.getElementById("fourLeftShip").innerHTML="<div class='ships'></div>";
+					}
+				}else{
+					console.log("cos poszlo nie tak");
+				}
 			}
-		}
-        
-        buildMyMap();
-   
-        buildEnemyMap();
-        
-        putMyShips();
-        
-        
-        /*]]>*/
-        </script>
-</body>
+	        
+	        buildMyMap();
+	   
+	        buildEnemyMap();
+	        
+	        putMyShips();
+	        
+	        document.querySelector("#text").addEventListener("keyup", event => {
+	            if(event.key !== "Enter") return;
+	            document.querySelector("#sendMessage").click();
+	            event.preventDefault();
+	        });
+	        
+	        /*]]>*/
+	        </script>
+	</body>
 </html>
