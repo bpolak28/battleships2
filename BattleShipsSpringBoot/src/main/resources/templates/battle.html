@@ -4,6 +4,8 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+		<link href="https://fonts.googleapis.com/css?family=Mali" rel="stylesheet">
 		<title>Bitwa!</title>
 		<style>
 			div{
@@ -100,24 +102,27 @@
 	</head>
 	<body class="bg-info text-light" style="text-align: center;">
 			<div class="container" style="text-align: center;">
+				<div id="endofgame" class="m-3"></div>
 		    	<div style="display: inline-block;">
-		    		<div>Pozostałych statków do zestrzelenia:</div>
-		        	<div>
-		        		<button type="button" class="leftShips btn btn-dark btn-sm" style="cursor: default;" >
-		        			Jednomasztowe  <span id="oneLeftShip" class="badge badge-light" style="display: inline-block; color: black; background-color: white;">4</span>
-		        		</button>
-		        		<button type="button" class="leftShips btn btn-dark btn-sm" style="cursor: default;" >
-		        			Dwumasztowe  <span id="twoLeftShip" class="badge badge-light" style="display: inline-block; color: black; background-color: white;">3</span>
-		        		</button>
-		        	</div>
-			        <div>
-			        	<button type="button" class="leftShips btn btn-dark btn-sm" style="cursor: default;" >
-		        			Trójmasztowe  <span id="threeLeftShip" class="badge badge-light" style="display: inline-block; color: black; background-color: white;">2</span>
-		        		</button>
-			        	<button type="button" class="leftShips btn btn-dark btn-sm" style="cursor: default;" >
-		        			Czteromasztowe  <span id="fourLeftShip" class="badge badge-light" style="display: inline-block; color: black; background-color: white;">1</span>
-		        		</button>
-			        </div>
+		    		<div id="top">
+			    		<div>Pozostałych statków do zestrzelenia:</div>
+			        	<div>
+			        		<button type="button" class="leftShips btn btn-dark btn-sm" style="cursor: default;" >
+			        			Jednomasztowe  <span id="oneLeftShip" class="badge badge-light" style="display: inline-block; color: black; background-color: white;">4</span>
+			        		</button>
+			        		<button type="button" class="leftShips btn btn-dark btn-sm" style="cursor: default;" >
+			        			Dwumasztowe  <span id="twoLeftShip" class="badge badge-light" style="display: inline-block; color: black; background-color: white;">3</span>
+			        		</button>
+			        	</div>
+				        <div>
+				        	<button type="button" class="leftShips btn btn-dark btn-sm" style="cursor: default;" >
+			        			Trójmasztowe  <span id="threeLeftShip" class="badge badge-light" style="display: inline-block; color: black; background-color: white;">2</span>
+			        		</button>
+				        	<button type="button" class="leftShips btn btn-dark btn-sm" style="cursor: default;" >
+			        			Czteromasztowe  <span id="fourLeftShip" class="badge badge-light" style="display: inline-block; color: black; background-color: white;">1</span>
+			        		</button>
+				        </div>
+		    		</div>
 			        <div style="background-color: white;">
 				        <div id="myMap" class="battlefield">
 			        		<p>wczytuję...</p>
@@ -133,13 +138,7 @@
 		        	</div>
 			        <p id="information2">Rozmieszczenie Twoich statków</p>
 		        </div>
-		        
-		        
-	            <br />
-	            <h4 id="finito" class="m-0 p-0"style="visibility: hidden;">Aby zagrać ponownie kliknij <a class="btn btn-success font-weight-bold" href="/" style="border: solid darkgreen 1px;">TUTAJ</a> i ponownie wybierz imię oraz grę. </h4>
-	            <br />
-	            
-	            <div id="conversationDiv" class="col-sm-12 col-md-9 col-lg-6 bg-dark rounded mb-10" style="border: solid black 1px; margin: auto">
+	            <div id="conversationDiv" class="col-sm-12 col-md-9 col-lg-6 bg-dark rounded my-3" style="border: solid black 1px; margin: auto">
 	            	<p class="p-1 m-0">Czat do wszystkich aktualnie grających</p>
 	                <div id="chat" style="text-align: center;">
 	                	<p id="response" class="bg-light"></p>
@@ -152,6 +151,14 @@
 	                </div>
 	            </div>
 	        </div>
+	        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+  				<div class="modal-dialog modal-dialog-centered" role="document">
+    				<div class="modal-content bg-light">
+      					<p class="far fa-grin-beam display-3 text-success" style="margin-top: 20px; margin-bottom: 0px;"></p>
+      					<span class="text-success font-weight-bold display-3" style="font-family: 'Mali', cursive; margin-bottom: 10px;">WYGRAŁEŚ!</span>
+    				</div>
+  				</div>
+			</div>
 	        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
 			<script src="/webjars/stomp-websocket/stomp.min.js"></script>
 			<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -169,7 +176,6 @@
 	        var socket = new SockJS('/chat');
 	        stompClient = Stomp.over(socket);
 	        stompClient.connect({}, function(frame) {
-	        	console.log('Connected: ' + frame);
 	        	stompClient.subscribe('/topic', function(messageOutput) {
 	        		showMessageOutput(JSON.parse(messageOutput.body));
 	        	});
@@ -179,7 +185,6 @@
 	        var socketShots = new SockJS('/shot');
 	        stompClientForShots = Stomp.over(socketShots);
 	        stompClientForShots.connect({}, function(frame) {
-	        	console.log('Connected: ' + frame);
 	        	stompClientForShots.subscribe('/shots', function(messageOutput) {
 	        		showShotOutput(JSON.parse(messageOutput.body));
 	        	});
@@ -226,7 +231,6 @@
 	        	var game = messageOutput.gameName;
 	        	var text = messageOutput.message;
 	        	var arr = text.split(" ");
-	        	console.log(arr);
 	        	if(game==gameName){
 	        		if(player==playerName){
 	                	if(arr[0]=="Przeciwnik"){
@@ -247,7 +251,8 @@
 	                			var x = document.getElementById("Y"+arr[0]);
 	                			x.innerHTML="<img src=\"/wybuch2.png\" alt=\"X\" />";
 	                			x.disabled = true;
-	                			document.getElementById("finito").style.visibility="visible";
+	                			document.getElementById("endofgame").innerHTML="<h4 class=\"m-0 p-0\">Aby zagrać ponownie kliknij <a class=\"btn btn-success font-weight-bold\" href=\"/\" style=\"border: solid darkgreen 1px;\">TUTAJ</a> i ponownie wybierz imię oraz grę. </h4>";
+	                			$("#myModal").modal({show: true});
 	                		}else{
 	                			document.getElementById("information").innerHTML="Trafiłeś, ale statek nadal płynie. Strzelaj dalej";
 	                			var x = document.getElementById("Y"+arr[0]);
@@ -283,7 +288,7 @@
 	                			document.getElementById("enemyMap").className="battlefield";
 	                			var x = document.getElementById("M"+arr[0]);
 	                			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
-	                			document.getElementById("finito").style.visibility="visible";
+	                			document.getElementById("endofgame").innerHTML="<h4 class=\"m-0 p-0\">Aby zagrać ponownie kliknij <a class=\"btn btn-success font-weight-bold\" href=\"/\" style=\"border: solid darkgreen 1px;\">TUTAJ</a> i ponownie wybierz imię oraz grę. </h4>";
 	                		}else{
 	                			document.getElementById("information2").innerHTML="Przeciwnik trafił Twój statek";
 	                			document.getElementById("information").innerHTML="Kolej przeciwnika";
@@ -306,10 +311,6 @@
 	                	}
 	            	}
 	        	}
-	        	
-	        	
-	        	console.log(messageOutput.fromPlayer + " shots: "
-	        			+ messageOutput.message);
 	        	
 	        }
 	  
@@ -394,7 +395,6 @@
 			function putMyShips(){
 				
 				for(var i=0;i<obj.length;i++){
-					console.log(obj[i].location);
 					document.getElementById("M"+obj[i].location).innerHTML="<img src=\"/statek3.jpg\" alt=\"X\" />";
 				}
 				
