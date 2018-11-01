@@ -438,10 +438,28 @@ public class GameService {
 					
 					if(isShipIsSunk(field, ships)) {
 						String type = field.getType();
-						if(isItEnd(ships)) {
-							return "hit "+type+" victory";
+						if(type.equals("oneFieldShip")) {
+							
+							if(isItEnd(ships)) {
+								return "hit "+field.getLocation()+" victory";
+							}
+							return "hit "+field.getLocation();
+							
+						} else {
+							
+							String sunkFields = "";
+							for(Field ship : ships) {
+								if(ship.getType().equals(type)) {
+									sunkFields += ship.getLocation()+",";
+								}
+							}
+							sunkFields = sunkFields.substring(0, sunkFields.length()-1);
+							if(isItEnd(ships)) {
+								return "hit "+sunkFields+" victory";
+							}
+							return "hit "+sunkFields;
 						}
-						return "hit "+type;
+						
 					} else {
 						return "hit";
 					}
