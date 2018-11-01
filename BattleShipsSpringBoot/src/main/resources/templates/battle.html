@@ -246,18 +246,27 @@
 	                	}else if(arr[1]=="hit"){
 	                		if(arr.length==3){
 	                			document.getElementById("information").innerHTML="Trafiłeś i zatopiłeś statek! Strzelaj dalej";
-	                			markDestroyedShip(arr[2]);
-	                			var x = document.getElementById("Y"+arr[0]);
-	                			x.innerHTML="<img src=\"/wybuch2.png\" alt=\"X\" />";
-	                			x.disabled = true;
+	                			var sunkFields = arr[2].split(",");
+	                			console.log(sunkFields);
+	                			for(var i=0; i<sunkFields.length;i++){
+	                				var x = document.getElementById("Y"+sunkFields[i]);
+		                			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
+		                			x.disabled = true;
+	                			}
+	                			markDestroyedShip(sunkFields.length);
+	                			
 	                		}else if(arr.length==4){
 	                			document.getElementById("information").innerHTML="Trafiłeś i zatopiłeś statek! Wygrywasz grę!";
 	                			document.getElementById("information2").innerHTML="Gratulacje!";
 	                			document.getElementById("myMap").className="battlefield";
-	                			markDestroyedShip(arr[2]);
-	                			var x = document.getElementById("Y"+arr[0]);
-	                			x.innerHTML="<img src=\"/wybuch2.png\" alt=\"X\" />";
-	                			x.disabled = true;
+	                			var sunkFields = arr[2].split(",");
+	                			console.log(sunkFields);
+	                			for(var i=0; i<sunkFields.length;i++){
+	                				var x = document.getElementById("Y"+sunkFields[i]);
+		                			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
+		                			x.disabled = true;
+	                			}
+	                			markDestroyedShip(sunkFields.length);
 	                			document.getElementById("endofgame").innerHTML="<h4 class=\"m-0 p-0\">Aby zagrać jeszcze raz kliknij <a class=\"btn btn-success font-weight-bold\" href=\"/\" style=\"border: solid darkgreen 1px;\">TUTAJ</a> i ponownie wybierz imię oraz grę. </h4>";
 	                			$("#myModal").modal({show: true});
 	                		}else{
@@ -414,26 +423,26 @@
 	
 			
 			function markDestroyedShip(shipType){
-				if(shipType=="oneFieldShip"){
+				if(shipType==1){
 					oneFieldLeftShips--;
 					var x = document.getElementById("oneLeftShip");
 					x.innerHTML=oneFieldLeftShips;
 					if(oneFieldLeftShips==0){
 						x.className="badge badge-light ships";
 					}
-				}else if(shipType.indexOf("Two")>-1){
+				}else if(shipType==2){
 					twoFieldLeftShips--;
 					document.getElementById("twoLeftShip").innerHTML=twoFieldLeftShips;
 					if(twoFieldLeftShips==0){
 						document.getElementById("twoLeftShip").className="badge badge-light ships";
 					}
-				}else if(shipType.indexOf("Three")>-1){
+				}else if(shipType==3){
 					threeFieldLeftShips--;
 					document.getElementById("threeLeftShip").innerHTML=threeFieldLeftShips;
 					if(threeFieldLeftShips==0){
 						document.getElementById("threeLeftShip").className="badge badge-light ships";
 					}
-				}else if(shipType=="fourFieldShip"){
+				}else if(shipType==4){
 					fourFieldLeftShips--;
 					document.getElementById("fourLeftShip").innerHTML=fourFieldLeftShips;
 					document.getElementById("fourLeftShip").className="badge badge-light ships";
