@@ -126,4 +126,11 @@ public class Game {
         ships.add(new Field("fourFieldShip"));
         return ships;
     }
+
+	public void deleteGuest() {
+		
+		this.guest = null;
+		this.guestShips = new ArrayList<>();
+		
+	}
 }

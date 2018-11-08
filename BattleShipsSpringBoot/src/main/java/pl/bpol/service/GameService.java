@@ -500,16 +500,25 @@ public class GameService {
 	public boolean checkBothPlayersAreAdded(String gameName) {
 		Game game;
 		game = games.stream().filter(g -> gameName.equals(g.getGameHostName())).findFirst().orElse(null);
-		if(game.getHost()!=null&&game.getGuest()!=null) {
-			return true;
+		if(game!=null) {
+			if(game.getHost()!=null&&game.getGuest()!=null) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			return false;
 		}
-		
 	}
 	
 	public String whoseTurn(String gameName) {
 		return games.stream().filter(g -> g.getGameHostName().equals(gameName)).findFirst().get().getPlayersTurn();
+	}
+
+	public void deleteGame(Game game) {
+		
+		this.games.removeIf(g -> g.equals(game));
+		
 	}
     
     

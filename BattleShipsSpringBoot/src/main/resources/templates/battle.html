@@ -105,7 +105,7 @@
 			<header>
 				<nav class="navbar bg-secondary justify-content-center">
 					<a class="btn btn-warning mx-3" type="button" href="/">Strona Startowa</a>
-					<a class="btn btn-warning mx-3" type="button" href="/">Wyjdz z gry</a>
+					<a class="btn btn-warning mx-3" type="button" href="/gameslist" onclick="sendShot('exit');">Wyjdz z gry</a>
 				</nav>
 			</header>
 			<div class="container" style="text-align: center;">
@@ -267,7 +267,7 @@
 		                			x.disabled = true;
 	                			}
 	                			markDestroyedShip(sunkFields.length);
-	                			document.getElementById("endofgame").innerHTML="<h4 class=\"m-0 p-0\">Aby zagrać jeszcze raz kliknij <a class=\"btn btn-success font-weight-bold\" href=\"/\" style=\"border: solid darkgreen 1px;\">TUTAJ</a> i ponownie wybierz imię oraz grę. </h4>";
+	                			document.getElementById("endofgame").innerHTML="<h4 class=\"m-0 p-0\">Aby zagrać jeszcze raz kliknij <a class=\"btn btn-success font-weight-bold\" href=\"/gameslist\" style=\"border: solid darkgreen 1px;\">TUTAJ</a> i ponownie wybierz grę. </h4>";
 	                			$("#myModal").modal({show: true});
 	                		}else{
 	                			document.getElementById("information").innerHTML="Trafiłeś, ale statek nadal płynie. Strzelaj dalej";
@@ -304,7 +304,7 @@
 	                			document.getElementById("enemyMap").className="battlefield";
 	                			var x = document.getElementById("M"+arr[0]);
 	                			x.innerHTML="<img src=\"/trafiony2.png\" alt=\"X\" />";
-	                			document.getElementById("endofgame").innerHTML="<h4 class=\"m-0 p-0\">Aby zagrać jeszcze raz kliknij <a class=\"btn btn-success font-weight-bold\" href=\"/\" style=\"border: solid darkgreen 1px;\">TUTAJ</a> i ponownie wybierz imię oraz grę. </h4>";
+	                			document.getElementById("endofgame").innerHTML="<h4 class=\"m-0 p-0\">Aby zagrać jeszcze raz kliknij <a class=\"btn btn-success font-weight-bold\" href=\"/gameslist\" style=\"border: solid darkgreen 1px;\">TUTAJ</a> i ponownie wybierz grę. </h4>";
 	                		}else{
 	                			document.getElementById("information2").innerHTML="Przeciwnik trafił Twój statek";
 	                			document.getElementById("information").innerHTML="Kolej przeciwnika";
