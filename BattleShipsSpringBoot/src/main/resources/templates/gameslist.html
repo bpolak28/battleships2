@@ -9,6 +9,7 @@
 	<body class="bg-info text-light" style="text-align: center;">
 		<div class="display-4 my-2" th:text="'Witaj '+${name}"></div>
 		<p>Możesz dołączyć do gry z poniższej listy lub stworzyć nową grę</p>
+		<p><a class="btn btn-secondary" style="font-size: 20px; padding-top: 0; padding-bottom: 0; padding-left: 10px; padding-right: 10px;" href="/gameslist">Odśwież</a></p>
 		<br>
 		<table class="table table-borderless">
 			<th:block th:each="game : ${games}">
