@@ -109,6 +109,7 @@
 				</nav>
 			</header>
 			<div class="container" style="text-align: center;">
+				<span id="musicEffects"><embed src="/explode.wav" hidden="true" autostart="true" loop="false" /></span>
 		    	<div style="display: inline-block;">
 		    		<div id="top">
 			    		<div>Pozostałych statków do zestrzelenia:</div>
@@ -242,8 +243,8 @@
 	        		if(player==playerName){
 	                	if(arr[0]=="Przeciwnik"){
 	                		document.getElementById("information").innerHTML="Przeciwnik jeszcze nie dołączył do gry";
-	                	
 	                	}else if(arr[1]=="hit"){
+	                		explode.play();
 	                		if(arr.length==3){
 	                			document.getElementById("information").innerHTML="Trafiłeś i zatopiłeś statek! Strzelaj dalej";
 	                			var sunkFields = arr[2].split(",");
@@ -276,6 +277,7 @@
 	                			x.disabled = true;
 	                		}
 	                	}else if(arr[1]=="mishit"){
+	                		miss.play();
 	                		document.getElementById("information").innerHTML="Pudło";
 	                		document.getElementById("information2").innerHTML="Kolej przeciwnika";
 	                		document.getElementById("myMap").className="battlefield";
@@ -463,6 +465,12 @@
 	            event.preventDefault();
 	        });
 	        
+	        function playSound(soundfile) {
+	        	  document.getElementById("musicEffects").innerHTML="<audio src=\""+soundfile+"\" hidden=\"true\" autostart=\"true\" loop=\"false\" ></audio>";
+	        }
+	        
+	        var explode = new Audio("/explode.wav");
+	        var miss = new Audio("/splash.wav")
 	        /*]]>*/
 	        </script>
 	</body>
